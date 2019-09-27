@@ -27,7 +27,13 @@ app.message('help', ({ message, say }) => {
 });
 
 app.message('enable', ({ message, say }) => {
-  say(`Bot enabled`);
+  console.log(message);
+  const channel = new Channel({
+    channelId: message.channel,
+    enabled: true
+  });
+  channel.save().then(() => say(`Bot enabled`));
+  
 });
 
 app.message('disable', ({ message, say }) => {
