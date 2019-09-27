@@ -11,6 +11,28 @@ app.message('hello', ({ message, say }) => {
   say(`Hey there <@${message.user}>!`);
 });
 
+app.message('help', ({ message, say }) => {
+  console.log(process.env.BOTENABLED)
+  if(process.env.BOTENABLED == 'true')
+  {
+    say(`enable - This command turn on the bot`);
+    say(`disable - This command turn off the bot`);
+    say(`help - Youre are here! :D`);
+  }
+});
+
+app.message('enable', ({ message, say }) => {
+  process.env.BOTENABLED=true;
+  console.log(process.env.BOTENABLED)
+  say(`Bot enabled`);
+});
+
+app.message('disable', ({ message, say }) => {
+  process.env.BOTENABLED=false;
+  console.log(process.env.BOTENABLED)
+  say(`Bot disabled, if you want to enable, type 'enable'`);
+});
+
 (async () => {
   // Start your app
   await app.start(process.env.PORT || 3000);
