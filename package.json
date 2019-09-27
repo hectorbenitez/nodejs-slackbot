@@ -1,0 +1,26 @@
+{
+  "name": "nodejs-slackbot",
+  "version": "1.0.0",
+  "description": "## Workshop",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "eval $(cat .env) nodemon app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hectorbenitez/nodejs-slackbot.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hectorbenitez/nodejs-slackbot/issues"
+  },
+  "homepage": "https://github.com/hectorbenitez/nodejs-slackbot#readme",
+  "dependencies": {
+    "@slack/bolt": "^1.3.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.2"
+  }
+}
