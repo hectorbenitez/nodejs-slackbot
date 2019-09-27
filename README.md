@@ -1,1 +1,3 @@
 # nodejs-slackbot
+
+## Workshop
