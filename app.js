@@ -1,4 +1,8 @@
 const { App } = require('@slack/bolt');
+const Channel = require('./models/channel')
+
+var mongoose = require('mongoose')
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true })
 
 const karmabotData = {
   enabled:true,
@@ -36,6 +40,26 @@ app.message('karma', ({ message, say }) => {
   console.log(message.text);
   //say(`Hey there <@${message.user}>!`);
   say(`User karma is: ${karmabotData.users[idUser]}`);
+  say(`Hey there <@${message.user}>!`);
+  Channel.find({
+    channelId: 'TEST'
+  }).then(channel => {
+    console.log(channel)
+  });
+});
+
+app.message('help', ({ message, say }) => {
+    say(`enable - This command turn on the bot`);
+    say(`disable - This command turn off the bot`);
+    say(`help - Youre are here! :D`);
+});
+
+app.message('enable', ({ message, say }) => {
+  say(`Bot enabled`);
+});
+
+app.message('disable', ({ message, say }) => {
+  say(`Bot disabled, if you want to enable, type 'enable'`);
 });
 
 
