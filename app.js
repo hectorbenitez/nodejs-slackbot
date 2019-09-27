@@ -19,18 +19,6 @@ const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET
 });
 
-app.message('karmaplus', ({ message, say }) => {
-  // say() sends a message to the channel where the event was triggered
-  const requestMessage = message.text;
-  const startPos = requestMessage.indexOf('<@') +2;
-  const endPos = requestMessage.indexOf('>', startPos);
-  const idUser = requestMessage.substring(startPos, endPos);
-  console.log(message.text);
-  //say(`Hey there <@${message.user}>!`);
-  karmabotData.users[idUser]++;
-  say(`User karma is now: ${karmabotData.users[idUser]}`);
-});
-
 app.message('karma', ({ message, say }) => {
   // say() sends a message to the channel where the event was triggered
   const requestMessage = message.text;
@@ -50,21 +38,6 @@ app.message('karma', ({ message, say }) => {
     //say(`Hey there <@${message.user}>!`)
   });
   
-});
-
-app.message('help', ({ message, say }) => {
-    say(`enable - This command turn on the bot`);
-    say(`disable - This command turn off the bot`);
-    say(`help - Youre are here! :D`);
-    console.log(message);
-});
-
-app.message('enable', ({ message, say }) => {
-  say(`Bot enabled`);
-});
-
-app.message('disable', ({ message, say }) => {
-  say(`Bot disabled, if you want to enable, type 'enable'`);
 });
 
 
