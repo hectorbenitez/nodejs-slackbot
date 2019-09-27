@@ -5,7 +5,7 @@ const ChannelSchema = new Schema(
     channelId: { type: String },
     botUserId: { type: String },
     users: { type: Schema.Types.Mixed },
-    enabled: { type: Boolean }
+    enabled: { type: Boolean, default: false }
   },
   {
     timestamps: true

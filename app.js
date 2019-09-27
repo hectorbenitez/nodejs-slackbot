@@ -21,6 +21,7 @@ const app = new App({
 
 app.message('karma', ({ message, say }) => {
   // say() sends a message to the channel where the event was triggered
+
   const requestMessage = message.text;
   const startPos = requestMessage.indexOf('<@') +2;
   const endPos = requestMessage.indexOf('>', startPos);
@@ -33,14 +34,27 @@ app.message('karma', ({ message, say }) => {
   })
   .then(channel => {
     console.log(channel)
-    console.log(channel.users[idUser])
-    say(`User karma is: ${channel.users[idUser]}`)
-    //say(`Hey there <@${message.user}>!`)
+    console.log(channel.users?channel.users[idUser]:0)
+    say(`User karma is: ${channel.users?channel.users[idUser]:0}`)
+    say(`Hey there <@${message.text}>!`)
   });
   
 });
 
 
+app.message('enable', ({ message, say }) => {
+  console.log(message);
+  const channel = new Channel({
+    channelId: message.channel,
+    enabled: true
+  });
+  channel.save().then(() => say(`Bot enabled`));
+  
+});
+
+app.message('disable', ({ message, say }) => {
+  say(`Bot disabled, if you want to enable, type 'enable'`);
+});
 
 (async () => {
   // Start your app
