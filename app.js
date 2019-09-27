@@ -20,6 +20,20 @@ app.message('hello', ({ message, say }) => {
   });
 });
 
+app.message('help', ({ message, say }) => {
+    say(`enable - This command turn on the bot`);
+    say(`disable - This command turn off the bot`);
+    say(`help - Youre are here! :D`);
+});
+
+app.message('enable', ({ message, say }) => {
+  say(`Bot enabled`);
+});
+
+app.message('disable', ({ message, say }) => {
+  say(`Bot disabled, if you want to enable, type 'enable'`);
+});
+
 (async () => {
   // Start your app
   await app.start(process.env.PORT || 3000);
