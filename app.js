@@ -28,16 +28,26 @@ app.message('help', ({ message, say }) => {
 
 app.message('enable', ({ message, say }) => {
   console.log(message);
-  const channel = new Channel({
-    channelId: message.channel,
-    enabled: true
-  });
-  channel.save().then(() => say(`Bot enabled`));
+  Channel.findOneAndUpdate({channelId:message.channel}, {enabled:true}, {upsert: true})
+  .then(() => {
+    say(`Bot enabled`)
+  })
+  .catch(err => {
+    console.log('error enabling',err);
+    say(`Bot can't enable :(`)
+  })
   
 });
 
 app.message('disable', ({ message, say }) => {
-  say(`Bot disabled, if you want to enable, type 'enable'`);
+  Channel.findOneAndUpdate({channelId:message.channel}, {enabled:false}, {upsert: true})
+  .then(() => {
+    say(`Bot disabled, if you want to enable, type 'enable'`);
+  })
+  .catch(err => {
+    console.log('error disabling',err);
+    say(`Bot can't disable :(`)
+  })
 });
 
 (async () => {
