@@ -10,21 +10,28 @@ const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET
 });
 
-app.message('hello', ({ message, say }) => {
+app.message('karma', ({ message, say }) => {
   // say() sends a message to the channel where the event was triggered
-  say(`Hey there <@${message.user}>!`);
-  Channel.find({
-    channelId: 'TEST'
-  }).then(channel => {
+
+  const requestMessage = message.text;
+  const startPos = requestMessage.indexOf('<@') +2;
+  const endPos = requestMessage.indexOf('>', startPos);
+  const idUser = requestMessage.substring(startPos, endPos);
+  console.log(message.text);
+  //say(`Hey there <@${message.user}>!`);
+  
+  const karmaInfo = Channel.findOne({
+    channelId: message.channel
+  })
+  .then(channel => {
     console.log(channel)
+    console.log(channel.users?channel.users[idUser]:0)
+    say(`User karma is: ${channel.users?channel.users[idUser]:0}`)
+    say(`Hey there <@${message.text}>!`)
   });
+  
 });
 
-app.message('help', ({ message, say }) => {
-    say(`enable - This command turn on the bot`);
-    say(`disable - This command turn off the bot`);
-    say(`help - Youre are here! :D`);
-});
 
 app.message('enable', ({ message, say }) => {
   console.log(message);
