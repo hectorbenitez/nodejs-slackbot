@@ -10,129 +10,72 @@ const app = new App({
   signingSecret: process.env.SLACK_SIGNING_SECRET
 });
 
-const botId = 'UNWGTHC5C';
-app.message('hello', ({ message, say }) => {
+app.message("<@", ({ message, say }) => {
+console.log(message);
+  
+  Channel.findOne({channelId:message.channel}).then(channel=>{
+    var t=message.text.split("> ");
+    if(t.length>1)
+    {
+      var user=t[0].substr(2,t[0].length);
+      var action= t[1].trim();
+    }
+
+if(channel.user.findOne(user) )
+{
+   if(action[0]=='+')
+   {
+      say(`User <@${user}> Received ${action.length-1} Karma points`);
+
+  
+   }
+   else{
+      if(action[0]=='-')
+      {
+        say(`User <@${user}> Received minus ${action.length-1} Karma points`);
+      }
+    
+   }
+
+  }
+
+
+
+
+  })
+  
+});
+
+  
+  app.message('hello',({message,say }) => {
+
   // say() sends a message to the channel where the event was triggered
   say(`Hey there <@${message.user}>!`);
-
   Channel.find({
-    channelId: 'CNUBMHXUY'
+    channelId: 'TEST'
   }).then(channel => {
-});
-
-app.message('karma', ({ message, say }) => {
-  // say() sends a message to the channel where the event was triggered
-
-  const requestMessage = message.text;
-  const startPos = requestMessage.indexOf('<@') +2;
-  const endPos = requestMessage.indexOf('>', startPos);
-  const idUser = requestMessage.substring(startPos, endPos);
-  console.log(message.text);
-  //say(`Hey there <@${message.user}>!`);
-  
-  const karmaInfo = Channel.findOne({
-    channelId: message.channel
-  })
-  .then(channel => {
     console.log(channel)
-    console.log(channel.users?channel.users[idUser]:0)
-    say(`User karma is: ${channel.users?channel.users[idUser]:0}`)
-    say(`Hey there <@${message.text}>!`)
   });
-  
 });
 
+app.message('help', ({ message, say }) => {
+    say(`enable - This command turn on the bot`);
+    say(`disable - This command turn off the bot`);
+    say(`help - Youre are here! :D`);
+});
 
 app.message('enable', ({ message, say }) => {
   console.log(message);
-  Channel.findOneAndUpdate({channelId:message.channel}, {enabled:true}, {upsert: true})
-  .then(() => {
-    say(`Bot enabled`)
-  })
-  .catch(err => {
-    console.log('error enabling',err);
-    say(`Bot can't enable :(`)
-  })
+  const channel = new Channel({
+    channelId: message.channel,
+    enabled: true
+  });
+  channel.save().then(() => say(`Bot enabled`));
+  
 });
 
 app.message('disable', ({ message, say }) => {
-  Channel.findOneAndUpdate({channelId:message.channel}, {enabled:false}, {upsert: true})
-  .then(() => {
-    say(`Bot disabled, if you want to enable, type 'enable'`);
-  })
-  .catch(err => {
-    console.log('error disabling',err);
-    say(`Bot can't disable :(`)
-  })
-});
-
-app.message('top', ({ message, say }) => {
-  // say() sends a message to the channel where the event was triggered
-  if(message.text.indexOf(botId) == 2)
-  {
-    //say(`Hey there <@${message.user}>! there is a list with the top users`);
-    Channel.findOne({
-      channelId: message.channel
-    }).then(channel => {
-    
-      var arrayUsers = channel.users
-
-      var keys = [];
-    for(var k in channel.users) keys.push(k);
-      let len = keys.length;
-      for (let i = 0; i < len; i++) {
-        
-          for (let j = 0; j < len; j++) {
-              if (arrayUsers[keys[j]] < arrayUsers[ keys[j+ 1] ]) {
-                  let tmp = arrayUsers[keys[j]];
-                  arrayUsers[keys[j]] = arrayUsers[keys[j+ 1] ];
-                  arrayUsers[keys[j+ 1] ] = tmp;
-              }
-          }
-      }
-      var messageToUser = ""
-      for (let i = 0; i < len; i++) {
-        messageToUser += `<@${keys[i]}>: ${arrayUsers[keys[i]]}\n`
-      }
-      say(`Hey there <@${message.user}>! there is a list with the top users\n` + messageToUser);
-    });
-  }
- 
-});
-
-app.message('bottom', ({ message, say }) => {
-  if(message.text.indexOf(botId) == 2)
-  {
- // say() sends a message to the channel where the event was triggered
- Channel.findOne({
-  channelId: message.channel
-}).then(channel => {
-
-  var arrayUsers = channel.users
-
-  var keys = [];
-for(var k in channel.users) keys.push(k);
-  let len = keys.length;
-  for (let i = 0; i < len; i++) {
-    
-      for (let j = 0; j < len; j++) {
-          if (arrayUsers[keys[j]] > arrayUsers[ keys[j+ 1] ]) {
-              let tmp = arrayUsers[keys[j]];
-              console.log(tmp)
-              arrayUsers[keys[j]] = arrayUsers[keys[j+ 1] ];
-              arrayUsers[keys[j+ 1] ] = tmp;
-          }
-
-      }
-  }
-  var messageToUser = ""
-  for (let i = 0; i < len; i++) {
-    messageToUser += `<@${keys[i]}>: ${arrayUsers[keys[i]]}\n`
-  }
-  say(`Hey there <@${message.user}>! there is a list with the bottom users\n` + messageToUser);
-});
-  }
-
+  say(`Bot disabled, if you want to enable, type 'enable'`);
 });
 
 (async () => {
