@@ -1,11 +1,11 @@
 const Channel = require('../models/channel')
+const { directMention } = require('@slack/bolt')
 
 module.exports = app => {
-  const botId = 'UNWGTHC5C'
-
-  app.message('top', ({ message, say }) => {
+  app.message(directMention(), 'top', ({ message, say }) => {
+    console.log('command top')
     // say() sends a message to the channel where the event was triggered
-    if (message.text.indexOf(botId) == 2) {
+    // if (message.text.indexOf(context.botUserId) == 2) {
       // say(`Hey there <@${message.user}>! there is a list with the top users`);
       Channel.findOne({
         channelId: message.channel
@@ -33,6 +33,6 @@ module.exports = app => {
             messageToUser
         )
       })
-    }
+    // }
   })
 }

@@ -1,7 +1,7 @@
 const Channel = require('./../models/channel')
 
 module.exports = app => {
-  app.message('karma', ({ message, say }) => {
+  app.message('karma', 'mention', ({ message, say }) => {
     const requestMessage = message.text
     const startPos = requestMessage.indexOf('<@') + 2
     const endPos = requestMessage.indexOf('>', startPos)
