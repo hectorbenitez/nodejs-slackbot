@@ -1,9 +1,10 @@
-module.exports = app => {
-  require('./hello')(app)
-  require('./karma')(app)
+/**
+ * Slack bot Commands
+ */
+
+module.exports = (app) => {
   require('./enable')(app)
   require('./disable')(app)
-  require('./top')(app)
-  require('./bottom')(app)
   require('./userMention')(app)
+  require('./score')(app)
 }
