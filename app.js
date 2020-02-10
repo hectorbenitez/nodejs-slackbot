@@ -5,7 +5,7 @@ const cors = require('cors')
 
 // Mongoose connection
 mongoose.connect(
-  process.env.MONGO_URI,
+  process.env.MONGODB_URI,
   { useNewUrlParser: true }
 )
 
