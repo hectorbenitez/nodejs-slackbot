@@ -1,19 +1,23 @@
 const Channel = require('../models/channel')
+const { directMention } = require('@slack/bolt')
 
 module.exports = app => {
-  app.message('enable', ({ message, say }) => {
-    console.log(message)
+  app.message(directMention(), 'enable', ({ message, say }) => {
+    // console.log('message: ', message);
     Channel.findOneAndUpdate(
       { channelId: message.channel },
-      { enabled: true },
+      {
+        enabled: true,
+        teamId: message.team,
+      },
       { upsert: true }
     )
       .then(() => {
-        say(`Bot enabled`)
+        say(`HeyBeer has been enabled`)
       })
-      .catch(err => {
-        console.log('error enabling', err)
-        say(`Bot can't enable :(`)
+      .catch(error => {
+        console.error('command enable:', error)
+        say(`Oops! We have a little problem enabling HeyBeer`)
       })
   })
 }

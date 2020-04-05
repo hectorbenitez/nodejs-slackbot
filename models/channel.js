@@ -3,8 +3,8 @@ const Schema = mongoose.Schema
 const ChannelSchema = new Schema(
   {
     channelId: { type: String },
-    botUserId: { type: String },
-    users: { type: Schema.Types.Mixed },
+    channelName: { type: String },
+    teamId: { type: String },
     enabled: { type: Boolean, default: false }
   },
   {
