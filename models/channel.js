@@ -5,7 +5,10 @@ const ChannelSchema = new Schema(
     channelId: { type: String },
     channelName: { type: String },
     teamId: { type: String },
-    enabled: { type: Boolean, default: false }
+    skills: [{
+      name: { type: String },
+      enabled: { type: Boolean, default: false }
+    }]
   },
   {
     timestamps: true

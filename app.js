@@ -4,10 +4,10 @@ const Team = require('./models/team')
 const cors = require('cors')
 
 // Mongoose connection
-mongoose.connect(
-  process.env.MONGODB_URI,
-  { useNewUrlParser: true }
-)
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
 
 const authorizeFn = async ({ teamId, enterpriseId }) => {
   return Team.findOne({ teamId, enterpriseId }).then(team => {
@@ -26,14 +26,15 @@ const app = new App({
 })
 
 // use CORS
-app.receiver.app.use(cors({
-  origin: '*',
-  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
-}))
+app.receiver.app.use(
+  cors({
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
+  })
+)
 
 require('./routes')(app)
 require('./commands')(app)
-
 ;(async () => {
   // Start app
   await app.start(process.env.PORT || 3000)

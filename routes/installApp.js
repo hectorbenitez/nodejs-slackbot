@@ -1,7 +1,7 @@
 const Team = require('../models/team')
 
 module.exports = app => {
-  app.receiver.app.get('/install/oauth/redirect', async (req, res) => {
+  app.receiver.app.get('/oauth/redirect', async (req, res) => {
     // console.log('It works!!!', req.query.code)
     const code = req.query.code
     app.client.oauth.v2
@@ -11,7 +11,7 @@ module.exports = app => {
         code
       })
       .then(async response => {
-        // console.log('response', response)
+        console.log('response', response)
         if (response.ok) {
           const botData = await app.client.users.info({
             token: response.access_token,
