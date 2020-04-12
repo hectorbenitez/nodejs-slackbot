@@ -3,7 +3,8 @@ const Schema = mongoose.Schema
 const TriviaGameSchema = new Schema(
   {
     channel: { type: Schema.Types.ObjectId, ref: 'Channel' },
-    question: { type: Schema.Types.ObjectId, ref: 'Question' }
+    question: { type: Schema.Types.ObjectId, ref: 'Question' },
+    leaderboard: {}
   },
   {
     timestamps: true
