@@ -7,4 +7,6 @@ module.exports = (app) => {
   require('./disable')(app)
   require('./userMention')(app)
   require('./score')(app)
+  require('./start')(app)
+  require('./all')(app)
 }

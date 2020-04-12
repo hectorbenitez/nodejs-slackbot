@@ -1,4 +1,5 @@
 const Channel = require('../models/channel')
+const TriviaGame = require('../models/triviaGame')
 const { directMention } = require('@slack/bolt')
 
 module.exports = app => {
@@ -18,7 +19,6 @@ module.exports = app => {
       })
     }
 
-    console.log()
     const skill = channel.skills.find(skill => skill.name === skillName)
     if (skill) {
       skill.enabled = true
@@ -30,22 +30,14 @@ module.exports = app => {
     }
 
     await channel.save()
-    say(`HeyBeer has been enabled`)
-  //   // console.log('message: ', message);
-  //   Channel.findOneAndUpdate(
-  //     { channelId: message.channel },
-  //     {
-  //       enabled: true,
-  //       teamId: message.team
-  //     },
-  //     { upsert: true }
-  //   )
-  //     .then(() => {
-  //       say(`HeyBeer has been enabled`)
-  //     })
-  //     .catch(error => {
-  //       console.error('command enable:', error)
-  //       say(`Oops! We have a little problem enabling HeyBeer`)
-  //     })
+    say(`Skill ${skillName} has been enabled`)
+
+    if (skillName === 'trivia') {
+      const triviaGame = new TriviaGame({
+        channel: channel._id,
+        question: null
+      })
+      triviaGame.save()
+    }
   })
 }
