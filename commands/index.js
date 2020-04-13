@@ -8,5 +8,6 @@ module.exports = (app) => {
   require('./userMention')(app)
   require('./score')(app)
   require('./start')(app)
+  require('./leaderboard')(app)
   require('./all')(app)
 }
