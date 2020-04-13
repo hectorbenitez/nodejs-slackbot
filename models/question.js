@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const QuestionSchema = new Schema(
   {
+    category: { type: String },
     question: { type: String },
     answer: { type: String }
   },

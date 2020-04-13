@@ -10,6 +10,10 @@ module.exports = app => {
       teamId: message.team
     })
 
+    if (!channel) {
+      return
+    }
+
     const triviaGame = await TriviaGame.findOne({
       channel: channel._id
     }).populate('question')

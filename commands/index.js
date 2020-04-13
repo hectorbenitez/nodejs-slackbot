@@ -9,5 +9,6 @@ module.exports = (app) => {
   require('./score')(app)
   require('./start')(app)
   require('./leaderboard')(app)
+  require('./addQuestion')(app)
   require('./all')(app)
 }
