@@ -2,7 +2,7 @@ const { App } = require('@slack/bolt')
 const mongoose = require('mongoose')
 const Team = require('./models/team')
 const cors = require('cors')
-
+require('dotenv').config()
 // Mongoose connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
