@@ -4,8 +4,11 @@ const { directMention } = require('@slack/bolt')
 
 module.exports = app => {
   app.message(directMention(), /enable [\w]+$/, async ({ message, say }) => {
+    
     const command = message.text.match(/enable [\w]+$/)[0]
-    const skillName = 'trivia'
+    const splitedCommand = command.split(" ")
+    const skillName = splitedCommand[1]
+
     let channel = await Channel.findOne({
       channelId: message.channel,
       teamId: message.team
