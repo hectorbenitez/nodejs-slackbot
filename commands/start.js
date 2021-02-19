@@ -1,6 +1,7 @@
 const Channel = require('../models/channel')
 const Question = require('../models/question')
 const TriviaGame = require('../models/triviaGame')
+const fetch = require('node-fetch');
 const { directMention } = require('@slack/bolt')
 
 const startOptions = Object.freeze({
@@ -22,6 +23,20 @@ module.exports = app => {
 
       case startOptions.SURVEY:
         say("Survey starting")
+        const url = "http://localhost:3005/api/v1/surveyAnswers"
+        const data = {
+          _idUser: "602e9a7b8aea9d0815546fd9",
+          _idSurvey: "602ae89e21697a369af0fdc6"
+        }
+
+        fetch(url, {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: { 'Content-Type': 'application/json' }
+        }).then(res => res.json())
+          .then(json => console.log(json));
+
+        //const survey = splitedCommand[2]
         break
 
       case startOptions.TRIVIA:
@@ -38,22 +53,5 @@ module.exports = app => {
         say("Command not found, try trivia or survey")
         break
     }    
-    
-  //   // console.log('message: ', message);
-  //   Channel.findOneAndUpdate(
-  //     { channelId: message.channel },
-  //     {
-  //       enabled: true,
-  //       teamId: message.team
-  //     },
-  //     { upsert: true }
-  //   )
-  //     .then(() => {
-  //       say(`HeyBeer has been enabled`)
-  //     })
-  //     .catch(error => {
-  //       console.error('command enable:', error)
-  //       say(`Oops! We have a little problem enabling HeyBeer`)
-  //     })
   })
 }

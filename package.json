@@ -23,7 +23,8 @@
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "moment": "^2.24.0",
-    "mongoose": "^5.8.11"
+    "mongoose": "^5.8.11",
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "nodemon": "^1.19.2"
