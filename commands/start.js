@@ -1,6 +1,8 @@
 const Channel = require('../models/channel')
 const Question = require('../models/question')
 const TriviaGame = require('../models/triviaGame')
+const Survey = require('../models/survey')
+const SurveySession = require('../models/surveySession')
 const fetch = require('node-fetch');
 const { directMention } = require('@slack/bolt')
 
@@ -29,17 +31,24 @@ module.exports = app => {
           _idUser: "602e9a7b8aea9d0815546fd9",
           _idSurvey: "602ae89e21697a369af0fdc6"
         }
-        
+
+        const surveySession = await SurveySession.findOne({
+          channel: channel._id
+        })
         fetch(url, {
           method: 'POST',
           body: JSON.stringify(data),
           headers: { 'Content-Type': 'application/json' }
         }).then(async res => await res.json())
-          .then(json => { console.log(json.survey)
-                          //say(`You are now starting ${json.survey.surveyName} survey.`)
-                          json.survey.questions.forEach(surveyQuestion => {
-                            say(`Q : ${surveyQuestion.question} A: | ${ surveyQuestion.answers } |`)
-                          });
+          .then(json => { 
+                          const survey = new Survey({
+                            surveyName:json.survey.surveyName,
+                            questions:json.survey.questions
+                          })
+                          survey.save()
+                          surveySession.survey = survey
+                          surveySession.save()
+                          say(` Q: ${survey.questions[0].question} A: |${survey.questions[0].answers} |`)
                         });
         
         //const survey = splitedCommand[2]
