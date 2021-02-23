@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "eval $(cat .env) nodemon --inspect app.js",
+    "dev": "nodemon --inspect app.js",
     "start": "node app.js"
   },
   "repository": {
@@ -21,8 +21,10 @@
   "dependencies": {
     "@slack/bolt": "^1.6.0",
     "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
     "moment": "^2.24.0",
-    "mongoose": "^5.8.11"
+    "mongoose": "^5.8.11",
+    "node-fetch": "^2.6.1"
   },
   "devDependencies": {
     "nodemon": "^1.19.2"
