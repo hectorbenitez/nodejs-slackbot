@@ -3,6 +3,7 @@ const Question = require('../models/question')
 const TriviaGame = require('../models/triviaGame')
 const SurveySession = require('../models/surveySession')
 const Survey = require('../models/survey')
+const fetch = require('node-fetch');
 const noDirectMention = require('../middlewares/noDirectMention')
 
 module.exports = app => {
@@ -51,18 +52,6 @@ module.exports = app => {
       })
     }
 
-    if (survey.questions[0].answers.includes(message.text)){
-      
-      survey.questions.shift()      
-      //TODO guardar respuesta
-      if(survey.questions.length > 0)
-        say(`Q: ${survey.questions[0].question} A: |${survey.questions[0].answers} |`)
-      else  
-        say("Gratz! Survey finished!!")
-      survey.markModified("questions")
-      await survey.save()
-    }
-
     if (nextQuestion) {
       await say(
         `Nice going <@${message.user}>, you have ${
@@ -73,6 +62,34 @@ module.exports = app => {
         async () => await say(`Next question: ${nextQuestion.question}`),
         1000
       )
+    }
+
+    if (survey.questions[0].answers.includes(message.text)) {
+      console.log(surveySession);
+      
+      const url = "http://localhost:3005/api/v1/surveyAnswers/saveAnswer"
+      const data = {
+        _idUserSurveyAnswers:survey.answerSurveyId,
+        _idQuestion: survey.surveyQuestions[0],
+        answer:message.text
+      }
+      console.log(data);
+      fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: { 'Content-Type': 'application/json' }
+      }).then(async res => await res.json())
+        .then(json => {
+          survey.questions.shift()
+          survey.surveyQuestions.shift()
+          if (survey.questions.length > 0)
+            say(`Q: ${survey.questions[0].question} A: |${survey.questions[0].answers} |`)
+          else
+            say("Gratz! Survey finished!!")
+          survey.markModified("questions")
+          survey.markModified("surveyQuestions")
+          survey.save()
+        });      
     }
   })
 }

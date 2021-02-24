@@ -18,20 +18,21 @@ module.exports = app => {
       teamId: message.team
     })    
 
-    const command = message.text.match(/start [\w]+$/)[0]
+    const command = message.text
     const splitedCommand = command.split(" ")
-    const startAction = splitedCommand[1]
-    
+    const startAction = splitedCommand[2]
     switch(startAction){
 
       case startOptions.SURVEY:
         say("Survey starting")
+
+        const surveyName = splitedCommand[3]
         const url = "http://localhost:3005/api/v1/surveyAnswers"
         const data = {
-          _idUser: "602e9a7b8aea9d0815546fd9",
-          _idSurvey: "602ae89e21697a369af0fdc6"
+          userId: message.user,
+          surveyName: surveyName
         }
-
+        console.log(data)
         const surveySession = await SurveySession.findOne({
           channel: channel._id
         })
@@ -43,7 +44,9 @@ module.exports = app => {
           .then(json => { 
                           const survey = new Survey({
                             surveyName:json.survey.surveyName,
-                            questions:json.survey.questions
+                            questions:json.survey.questions,
+                            answerSurveyId:json._id,
+                            surveyQuestions:json.questions
                           })
                           survey.save()
                           surveySession.survey = survey
@@ -51,7 +54,6 @@ module.exports = app => {
                           say(` Q: ${survey.questions[0].question} A: |${survey.questions[0].answers} |`)
                         });
         
-        //const survey = splitedCommand[2]
         break
 
       case startOptions.TRIVIA:

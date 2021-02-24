@@ -10,6 +10,8 @@ const SurveySchema = new Schema(
                 answers: [{ type: String }],
             },
         ],
+        answerSurveyId: { type:String },
+        surveyQuestions: [{type: String}]
     },
     {
         timestamps: true,
