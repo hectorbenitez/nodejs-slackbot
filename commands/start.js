@@ -1,6 +1,8 @@
 const Channel = require('../models/channel')
 const Question = require('../models/question')
 const TriviaGame = require('../models/triviaGame')
+const Survey = require('../models/survey')
+const SurveySession = require('../models/surveySession')
 const fetch = require('node-fetch');
 const { directMention } = require('@slack/bolt')
 
@@ -16,33 +18,42 @@ module.exports = app => {
       teamId: message.team
     })    
 
-    const command = message.text.match(/start [\w]+$/)[0]
+    const command = message.text
     const splitedCommand = command.split(" ")
-    const startAction = splitedCommand[1]
-    
+    const startAction = splitedCommand[2]
     switch(startAction){
 
       case startOptions.SURVEY:
         say("Survey starting")
+
+        const surveyName = splitedCommand[3]
         const url = "http://localhost:3005/api/v1/surveyAnswers"
         const data = {
-          _idUser: "602e9a7b8aea9d0815546fd9",
-          _idSurvey: "602ae89e21697a369af0fdc6"
+          userId: message.user,
+          surveyName: surveyName
         }
-        
+        console.log(data)
+        const surveySession = await SurveySession.findOne({
+          channel: channel._id
+        })
         fetch(url, {
           method: 'POST',
           body: JSON.stringify(data),
           headers: { 'Content-Type': 'application/json' }
         }).then(async res => await res.json())
-          .then(json => { console.log(json.survey)
-                          //say(`You are now starting ${json.survey.surveyName} survey.`)
-                          json.survey.questions.forEach(surveyQuestion => {
-                            say(`Q : ${surveyQuestion.question} A: | ${ surveyQuestion.answers } |`)
-                          });
+          .then(json => { 
+                          const survey = new Survey({
+                            surveyName:json.survey.surveyName,
+                            questions:json.survey.questions,
+                            answerSurveyId:json._id,
+                            surveyQuestions:json.questions
+                          })
+                          survey.save()
+                          surveySession.survey = survey
+                          surveySession.save()
+                          say(` Q: ${survey.questions[0].question} A: |${survey.questions[0].answers} |`)
                         });
         
-        //const survey = splitedCommand[2]
         break
 
       case startOptions.TRIVIA:

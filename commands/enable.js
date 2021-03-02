@@ -1,5 +1,6 @@
 const Channel = require('../models/channel')
 const TriviaGame = require('../models/triviaGame')
+const SurveySession = require('../models/surveySession')
 const { directMention } = require('@slack/bolt')
 
 module.exports = app => {
@@ -41,6 +42,12 @@ module.exports = app => {
         question: null
       })
       triviaGame.save()
+    }else if(skillName === 'survey'){
+      const surveySession = new SurveySession({
+        channel: channel._id,
+        survey:null
+      })
+      surveySession.save()
     }
   })
 }
