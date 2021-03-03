@@ -26,53 +26,50 @@ module.exports = (app) => {
         say("Survey starting");
 
         const surveyName = splitedCommand[3];
-        const survey = await Survey.findOne({ surveyName })
+        const survey = await Survey.findOne({ surveyName });
 
-        const surveySession = new SurveySession()
+        const surveySession = new SurveySession();
         surveySession.slackUser = message.user;
         surveySession.survey = survey;
-        surveySession.questions = survey.questions.map(question => { question });
+        surveySession.questions = survey.questions.map(({ question }) => {
+          question;
+        });
         surveySession.save();
 
-        say(
-          {
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "Question: Question 1?"
-                }
+        say({
+          blocks: [
+            {
+              type: "section",
+              text: {
+                type: "mrkdwn",
+                text: "Question: Question 1?",
               },
-              {
-                "type": "actions",
-                "elements": [
-                  {
-                    "type": "button",
-                    "text": {
-                      "type": "plain_text",
-                      "emoji": true,
-                      "text": "Approve"
-                    },
-                    "value": "click_me_123"
+            },
+            {
+              type: "actions",
+              elements: [
+                {
+                  type: "button",
+                  text: {
+                    type: "plain_text",
+                    emoji: true,
+                    text: "Approve",
                   },
-                  {
-                    "type": "button",
-                    "text": {
-                      "type": "plain_text",
-                      "emoji": true,
-                      "text": "Deny"
-                    },
-                    "value": "click_me_123"
-                  }
-                ]
-              }
-            ]
-          }
-        );
-
-
-
+                  value: "click_me_123",
+                },
+                {
+                  type: "button",
+                  text: {
+                    type: "plain_text",
+                    emoji: true,
+                    text: "Deny",
+                  },
+                  value: "click_me_123",
+                },
+              ],
+            },
+          ],
+        });
 
         // const url = `${process.env.API_BASE_URL}/api/v1/surveyAnswers`;
         // const data = {
