@@ -17,7 +17,7 @@ module.exports = app => {
     surveySession.questions[surveySession.index].answer = action.value;
     surveySession.index++;
 
-    if(index === surveySession.questions.length) {
+    if(surveySession.index === surveySession.questions.length) {
       surveySession.isCompleted = true;
     }
 
