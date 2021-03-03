@@ -27,6 +27,13 @@ module.exports = (app) => {
 
         const surveyName = splitedCommand[3];
         const survey = await Survey.findOne({ surveyName })
+
+        const surveySession = new SurveySession()
+        surveySession.slackUser = message.user;
+        surveySession.survey = survey;
+        surveySession.questions = survey.questions.map(question => { question });
+        surveySession.save();
+
         say(
           {
             "blocks": [
