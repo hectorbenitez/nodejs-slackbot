@@ -35,6 +35,8 @@ app.receiver.app.use(
 
 require('./routes')(app)
 require('./commands')(app)
+require('./actions')(app)
+
 ;(async () => {
   // Start app
   await app.start(process.env.PORT || 3000)
