@@ -18,8 +18,11 @@ module.exports = (app) => {
         return say("You are not answering a survey");
       }
 
-      console.log(body.user.id, surveySession);
-      surveySession.questions[surveySession.index].answer = action.value;
+      const answerValue = action.value.split('-');
+      const questionIndex = answerValue[1];
+      const answer = answerValue[2];
+      
+      surveySession.questions[questionIndex].answer = answer;
       surveySession.index++;
 
       if (surveySession.index === surveySession.questions.length) {
@@ -31,9 +34,9 @@ module.exports = (app) => {
         channel: body.channel.id,
         ts: body.message.ts,
         blocks: createBlockKitQuestion(
-          surveySession.questions[surveySession.index - 1],
-          surveySession.index - 1,
-          true
+          surveySession.questions[questionIndex],
+          questionIndex,
+          answer
         ),
       });
 
@@ -59,17 +62,14 @@ module.exports = (app) => {
 };
 
 function createBlockKitQuestion(question, index, answerSelected = null) {
-  if (answerSelected) {
-    return [
-      {
-        type: "section",
-        text: {
-          type: "mrkdwn",
-          text: `Question: ${question.question}`,
-        },
-      },
-    ];
-  }
+  const likertAnswers = [
+    "Never",
+    "Almost Never",
+    "Sometimes",
+    "Almost Always",
+    "Always",
+  ];
+
   return [
     {
       type: "section",
@@ -80,58 +80,24 @@ function createBlockKitQuestion(question, index, answerSelected = null) {
     },
     {
       type: "actions",
-      elements: [
-        {
+      elements: likertAnswers.map((answer, idx) => {
+        const button = {
           type: "button",
-          action_id: "survey-answer-0",
-          value: `answer_${index}_0`,
+          action_id: `survey-answer-${idx}`,
+          value: `answer-${index}-${answer}`,
           text: {
             type: "plain_text",
             emoji: true,
-            text: "Never",
+            text: answer,
           },
-        },
-        {
-          type: "button",
-          action_id: "survey-answer-1",
-          value: `answer_${index}_1`,
-          text: {
-            type: "plain_text",
-            emoji: true,
-            text: "Almost Never",
-          },
-        },
-        {
-          type: "button",
-          action_id: "survey-answer-2",
-          value: `answer_${index}_2`,
-          text: {
-            type: "plain_text",
-            emoji: true,
-            text: "Sometimes",
-          },
-        },
-        {
-          type: "button",
-          action_id: "survey-answer-3",
-          value: `answer_${index}_3`,
-          text: {
-            type: "plain_text",
-            emoji: true,
-            text: "Almost Always",
-          },
-        },
-        {
-          type: "button",
-          action_id: "survey-answer-4",
-          value: `answer_${index}_4`,
-          text: {
-            type: "plain_text",
-            emoji: true,
-            text: "Always",
-          },
-        },
-      ],
+        };
+
+        if(answerSelected === answer) {
+          button.style = 'primary'
+        }
+
+        return button;
+      }),
     },
   ];
 }
