@@ -41,7 +41,8 @@ module.exports = app => {
 
     const question = surveySession.questions[surveySession.index];
 
-    await say(createBlockKitQuestion(question, surveySession.index));
+    const message = await say(createBlockKitQuestion(question, surveySession.index));
+    console.log('new message', message);
   })
 }
 
