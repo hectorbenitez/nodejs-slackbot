@@ -28,7 +28,12 @@ module.exports = (app) => {
         const surveyName = splitedCommand[3];
         const survey = await Survey.findOne({ surveyName });
 
-        const surveySession = new SurveySession();
+        let surveySession = await SurveySession.findOne({ slackUser: message.user, isCompleted: false });
+        if (surveySession) {
+          return await say('You are already answering a survey')
+        }
+
+        surveySession = new SurveySession();
         surveySession.slackUser = message.user;
         surveySession.survey = survey;
         surveySession.questions = survey.questions.map(({ question }) => ({
