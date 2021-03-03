@@ -22,10 +22,17 @@ module.exports = app => {
     }
     await surveySession.save();
 
-    await client.chat.update({
+    const result = await client.chat.update({
       channel: body.channel.id,
       ts: body.message.ts,
       text: 'Updated'
+    });
+
+    console.log({
+      channel: body.channel.id,
+      ts: body.message.ts,
+      text: 'Updated',
+      result
     });
 
     if (surveySession.isCompleted) {
