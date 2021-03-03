@@ -1,4 +1,5 @@
 const Team = require('../models/team')
+require('dotenv').config()
 
 module.exports = app => {
   app.receiver.app.get('/oauth/redirect', async (req, res) => {

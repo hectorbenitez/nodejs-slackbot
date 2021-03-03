@@ -1,11 +1,15 @@
 const Channel = require('../models/channel')
 const TriviaGame = require('../models/triviaGame')
+const SurveySession = require('../models/surveySession')
 const { directMention } = require('@slack/bolt')
 
 module.exports = app => {
   app.message(directMention(), /enable [\w]+$/, async ({ message, say }) => {
+    
     const command = message.text.match(/enable [\w]+$/)[0]
-    const skillName = 'trivia'
+    const splitedCommand = command.split(" ")
+    const skillName = splitedCommand[1]
+
     let channel = await Channel.findOne({
       channelId: message.channel,
       teamId: message.team
@@ -38,6 +42,12 @@ module.exports = app => {
         question: null
       })
       triviaGame.save()
+    }else if(skillName === 'survey'){
+      const surveySession = new SurveySession({
+        channel: channel._id,
+        survey:null
+      })
+      surveySession.save()
     }
   })
 }
