@@ -8,7 +8,7 @@ module.exports = app => {
     console.log(body, action, context)
     await ack();
     
-    const surveySession = SurveySession.findOne({ slackUser: body.user.id });
+    const surveySession = await SurveySession.findOne({ slackUser: body.user.id });
     console.log(body.user.id, surveySession);
     surveySession.questions[surveySession.index].answer = action.value;
     surveySession.index++;
