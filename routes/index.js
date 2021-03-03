@@ -9,7 +9,7 @@ module.exports = (receiver) => {
   require('./api/v1/teamActivity')(receiver)
   require('./api/v1/teamScore')(receiver)
 
-  receiver.get('/', (req, res) => {
+  receiver.router.get('/', (req, res) => {
     res.send('ok')
   })
 }

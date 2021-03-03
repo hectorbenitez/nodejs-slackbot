@@ -1,7 +1,7 @@
 const Activity = require('../../../models/activity')
 
 module.exports = receiver => {
-  receiver.get('/api/v1/teams/:team/activity', async (req, res) => {
+  receiver.router.get('/api/v1/teams/:team/activity', async (req, res) => {
     try {
       const activity = await Activity.find({ teamId: req.params.team })
                                       .populate('channel')
