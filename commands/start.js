@@ -27,7 +27,7 @@ module.exports = app => {
         say("Survey starting")
 
         const surveyName = splitedCommand[3]
-        const url = "http://localhost:3005/api/v1/surveyAnswers"
+        const url = `${process.env.API_BASE_URL}/api/v1/surveyAnswers`
         const data = {
           userId: message.user,
           surveyName: surveyName
