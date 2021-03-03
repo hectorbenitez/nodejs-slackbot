@@ -42,7 +42,7 @@ module.exports = (app) => {
               type: "section",
               text: {
                 type: "mrkdwn",
-                text: "Question: Question 1?",
+                text: `Question: ${surveySession.questions[0].question}`,
               },
             },
             {
@@ -53,18 +53,45 @@ module.exports = (app) => {
                   text: {
                     type: "plain_text",
                     emoji: true,
-                    text: "Approve",
+                    text: "Never",
                   },
-                  value: "click_me_123",
+                  value: `answer_${surveySession.questions[0].question}_0`,
                 },
                 {
                   type: "button",
                   text: {
                     type: "plain_text",
                     emoji: true,
-                    text: "Deny",
+                    text: "Almost Never",
                   },
-                  value: "click_me_123",
+                  value: `answer_${surveySession.questions[0].question}_1`,
+                },
+                {
+                  type: "button",
+                  text: {
+                    type: "plain_text",
+                    emoji: true,
+                    text: "Sometimes",
+                  },
+                  value: `answer_${surveySession.questions[0].question}_2`,
+                },
+                {
+                  type: "button",
+                  text: {
+                    type: "plain_text",
+                    emoji: true,
+                    text: "Almost Always",
+                  },
+                  value: `answer_${surveySession.questions[0].question}_3`,
+                },
+                {
+                  type: "button",
+                  text: {
+                    type: "plain_text",
+                    emoji: true,
+                    text: "Always",
+                  },
+                  value: `answer_${surveySession.questions[0].question}_4`,
                 },
               ],
             },
