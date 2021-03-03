@@ -31,9 +31,9 @@ module.exports = (app) => {
         const surveySession = new SurveySession();
         surveySession.slackUser = message.user;
         surveySession.survey = survey;
-        surveySession.questions = survey.questions.map(({ question }) => {
-          question;
-        });
+        surveySession.questions = survey.questions.map(({ question }) => ({
+          question,
+        }));
         surveySession.save();
 
         say({
