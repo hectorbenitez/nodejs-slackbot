@@ -50,7 +50,7 @@ module.exports = (app) => {
               elements: [
                 {
                   type: "button",
-                  action_id: 'survey-answer',
+                  action_id: 'survey-answer-0',
                   value: `answer_${surveySession.index}_0`,
                   text: {
                     type: "plain_text",
@@ -60,7 +60,7 @@ module.exports = (app) => {
                 },
                 {
                   type: "button",
-                  action_id: 'survey-answer',
+                  action_id: 'survey-answer-1',
                   value: `answer_${surveySession.index}_1`,
                   text: {
                     type: "plain_text",
@@ -70,7 +70,7 @@ module.exports = (app) => {
                 },
                 {
                   type: "button",
-                  action_id: 'survey-answer',
+                  action_id: 'survey-answer-2',
                   value: `answer_${surveySession.index}_2`,
                   text: {
                     type: "plain_text",
@@ -80,7 +80,7 @@ module.exports = (app) => {
                 },
                 {
                   type: "button",
-                  action_id: 'survey-answer',
+                  action_id: 'survey-answer-3',
                   value: `answer_${surveySession.index}_3`,
                   text: {
                     type: "plain_text",
@@ -90,7 +90,7 @@ module.exports = (app) => {
                 },
                 {
                   type: "button",
-                  action_id: 'survey-answer',
+                  action_id: 'survey-answer-4',
                   value: `answer_${surveySession.index}_4`,
                   text: {
                     type: "plain_text",
