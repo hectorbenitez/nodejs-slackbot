@@ -26,36 +26,44 @@ module.exports = (app) => {
         say("Survey starting");
 
         const surveyName = splitedCommand[3];
-        const url = `${process.env.API_BASE_URL}/api/v1/surveyAnswers`;
-        const data = {
-          userId: message.user,
-          surveyName: surveyName,
-        };
-        console.log(data, url);
-        const surveySession = await SurveySession.findOne({
-          channel: channel._id,
-        });
-        fetch(url, {
-          method: "POST",
-          body: JSON.stringify(data),
-          headers: { "Content-Type": "application/json" },
-        })
-          .then(async (res) => await res.json())
-          .then((json) => {
-            const survey = new Survey({
-              surveyName: json.survey.surveyName,
-              questions: json.survey.questions,
-              answerSurveyId: json._id,
-              surveyQuestions: json.questions,
-            });
-            survey.save();
-            surveySession.survey = survey;
-            surveySession.save();
-            say(
-              ` Q: ${survey.questions[0].question} A: |${survey.questions[0].answers} |`
-            );
-          })
-          .catch((error) => console.error(error));
+        const survey = await Survey.findOne({ surveyName })
+        say(
+          ` Q: ${survey.questions[0].question} A: |${survey.questions[0].answers} |`
+        );
+
+
+
+
+        // const url = `${process.env.API_BASE_URL}/api/v1/surveyAnswers`;
+        // const data = {
+        //   userId: message.user,
+        //   surveyName: surveyName,
+        // };
+        // console.log(data, url);
+        // const surveySession = await SurveySession.findOne({
+        //   channel: channel._id,
+        // });
+        // fetch(url, {
+        //   method: "POST",
+        //   body: JSON.stringify(data),
+        //   headers: { "Content-Type": "application/json" },
+        // })
+        //   .then(async (res) => await res.json())
+        //   .then((json) => {
+        //     const survey = new Survey({
+        //       surveyName: json.survey.surveyName,
+        //       questions: json.survey.questions,
+        //       answerSurveyId: json._id,
+        //       surveyQuestions: json.questions,
+        //     });
+        //     survey.save();
+        //     surveySession.survey = survey;
+        //     surveySession.save();
+        //     say(
+        //       ` Q: ${survey.questions[0].question} A: |${survey.questions[0].answers} |`
+        //     );
+        //   })
+        //   .catch((error) => console.error(error));
 
         break;
 
