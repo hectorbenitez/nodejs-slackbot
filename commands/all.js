@@ -4,10 +4,10 @@ const TriviaGame = require('../models/triviaGame')
 const SurveySession = require('../models/surveySession')
 const Survey = require('../models/survey')
 const fetch = require('node-fetch');
-const noDirectMention = require('../middlewares/noDirectMention')
+// const noDirectMention = require('../middlewares/noDirectMention')
 
 module.exports = app => {
-  app.message(noDirectMention, /.+/, async ({ message, say, context }) => {
+  app.message(/.+/, async ({ message, say, context }) => {
     let channel = await Channel.findOne({
       channelId: message.channel,
       teamId: message.team
