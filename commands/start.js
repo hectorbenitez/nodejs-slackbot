@@ -28,7 +28,40 @@ module.exports = (app) => {
         const surveyName = splitedCommand[3];
         const survey = await Survey.findOne({ surveyName })
         say(
-          ` Q: ${survey.questions[0].question} A: |${survey.questions[0].answers} |`
+          {
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "Question: Question 1?"
+                }
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "emoji": true,
+                      "text": "Approve"
+                    },
+                    "value": "click_me_123"
+                  },
+                  {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "emoji": true,
+                      "text": "Deny"
+                    },
+                    "value": "click_me_123"
+                  }
+                ]
+              }
+            ]
+          }
         );
 
 
