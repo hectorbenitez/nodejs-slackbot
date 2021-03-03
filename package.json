@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/hectorbenitez/nodejs-slackbot#readme",
   "dependencies": {
-    "@slack/bolt": "^1.6.0",
+    "@slack/bolt": "^3.2.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "moment": "^2.24.0",

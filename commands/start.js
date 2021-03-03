@@ -50,48 +50,53 @@ module.exports = (app) => {
               elements: [
                 {
                   type: "button",
+                  action_id: 'survey-answer',
+                  value: `answer_${surveySession.index}_0`,
                   text: {
                     type: "plain_text",
                     emoji: true,
                     text: "Never",
-                  },
-                  value: `answer_${surveySession.questions[0].question}_0`,
+                  }
                 },
                 {
                   type: "button",
+                  action_id: 'survey-answer',
+                  value: `answer_${surveySession.index}_1`,
                   text: {
                     type: "plain_text",
                     emoji: true,
                     text: "Almost Never",
-                  },
-                  value: `answer_${surveySession.questions[0].question}_1`,
+                  }
                 },
                 {
                   type: "button",
+                  action_id: 'survey-answer',
+                  value: `answer_${surveySession.index}_2`,
                   text: {
                     type: "plain_text",
                     emoji: true,
                     text: "Sometimes",
-                  },
-                  value: `answer_${surveySession.questions[0].question}_2`,
+                  }
                 },
                 {
                   type: "button",
+                  action_id: 'survey-answer',
+                  value: `answer_${surveySession.index}_3`,
                   text: {
                     type: "plain_text",
                     emoji: true,
                     text: "Almost Always",
-                  },
-                  value: `answer_${surveySession.questions[0].question}_3`,
+                  }
                 },
                 {
                   type: "button",
+                  action_id: 'survey-answer',
+                  value: `answer_${surveySession.index}_4`,
                   text: {
                     type: "plain_text",
                     emoji: true,
                     text: "Always",
-                  },
-                  value: `answer_${surveySession.questions[0].question}_4`,
+                  }
                 },
               ],
             },
