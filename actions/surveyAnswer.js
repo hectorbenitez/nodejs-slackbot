@@ -32,6 +32,7 @@ module.exports = (app) => {
         ts: body.message.ts,
         blocks: createBlockKitQuestion(
           surveySession.questions[surveySession.index - 1],
+          surveySession.index - 1,
           true
         ),
       });
