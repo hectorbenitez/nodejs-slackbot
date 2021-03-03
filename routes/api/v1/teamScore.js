@@ -2,8 +2,8 @@ const Activity = require('../../../models/activity')
 const User = require('../../../models/user')
 const moment = require('moment')
 
-module.exports = app => {
-  app.receiver.app.get('/api/v1/teams/:team/score/:lapse', async (req, res) => {
+module.exports = receiver => {
+  receiver.get('/api/v1/teams/:team/score/:lapse', async (req, res) => {
     const today = moment().startOf('day')
     let fromDate;
     let toDate;

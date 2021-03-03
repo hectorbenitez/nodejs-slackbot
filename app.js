@@ -1,4 +1,4 @@
-const { App } = require('@slack/bolt')
+const { App, ExpressReceiver } = require('@slack/bolt')
 const mongoose = require('mongoose')
 const Team = require('./models/team')
 const cors = require('cors')
@@ -19,6 +19,8 @@ const authorizeFn = async ({ teamId, enterpriseId }) => {
   })
 }
 
+const receiver = new ExpressReceiver({ signingSecret: process.env.SLACK_SIGNING_SECRET });
+
 // Initialize app with our signing secret
 const app = new App({
   authorize: authorizeFn,
@@ -26,14 +28,14 @@ const app = new App({
 })
 
 // use CORS
-app.receiver.app.use(
+receiver.use(
   cors({
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
   })
 )
 
-require('./routes')(app)
+require('./routes')(receiver)
 require('./commands')(app)
 require('./actions')(app)
 

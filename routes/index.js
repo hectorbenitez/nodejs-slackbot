@@ -2,14 +2,14 @@
  * Routes
  */
 
-module.exports = (app) => {
-  require('./installApp')(app)
-  require('./api/v1/userTeams')(app)
-  require('./api/v1/allTeams')(app)
-  require('./api/v1/teamActivity')(app)
-  require('./api/v1/teamScore')(app)
+module.exports = (receiver) => {
+  require('./installApp')(receiver)
+  require('./api/v1/userTeams')(receiver)
+  require('./api/v1/allTeams')(receiver)
+  require('./api/v1/teamActivity')(receiver)
+  require('./api/v1/teamScore')(receiver)
 
-  app.receiver.app.get('/', (req, res) => {
+  receiver.get('/', (req, res) => {
     res.send('ok')
   })
 }

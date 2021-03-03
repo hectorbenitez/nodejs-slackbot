@@ -1,7 +1,7 @@
 const Team = require('../../../models/team')
 
-module.exports = app => {
-  app.receiver.app.get('/api/v1/users/:user/teams', async (req, res) => {
+module.exports = receiver => {
+  receiver.get('/api/v1/users/:user/teams', async (req, res) => {
     try {
       const teams = await Team.find({ authedUserId: req.params.user })
       res.json(teams)
