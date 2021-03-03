@@ -54,7 +54,7 @@ function createBlockKitQuestion(question, index, answerSelected = null) {
           {
             type: "button",
             action_id: 'survey-answer-0',
-            value: `answer_${surveySession.index}_0`,
+            value: `answer_${index}_0`,
             text: {
               type: "plain_text",
               emoji: true,
@@ -64,7 +64,7 @@ function createBlockKitQuestion(question, index, answerSelected = null) {
           {
             type: "button",
             action_id: 'survey-answer-1',
-            value: `answer_${surveySession.index}_1`,
+            value: `answer_${index}_1`,
             text: {
               type: "plain_text",
               emoji: true,
@@ -74,7 +74,7 @@ function createBlockKitQuestion(question, index, answerSelected = null) {
           {
             type: "button",
             action_id: 'survey-answer-2',
-            value: `answer_${surveySession.index}_2`,
+            value: `answer_${index}_2`,
             text: {
               type: "plain_text",
               emoji: true,
@@ -84,7 +84,7 @@ function createBlockKitQuestion(question, index, answerSelected = null) {
           {
             type: "button",
             action_id: 'survey-answer-3',
-            value: `answer_${surveySession.index}_3`,
+            value: `answer_${index}_3`,
             text: {
               type: "plain_text",
               emoji: true,
@@ -94,7 +94,7 @@ function createBlockKitQuestion(question, index, answerSelected = null) {
           {
             type: "button",
             action_id: 'survey-answer-4',
-            value: `answer_${surveySession.index}_4`,
+            value: `answer_${index}_4`,
             text: {
               type: "plain_text",
               emoji: true,
