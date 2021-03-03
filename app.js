@@ -24,11 +24,12 @@ const receiver = new ExpressReceiver({ signingSecret: process.env.SLACK_SIGNING_
 // Initialize app with our signing secret
 const app = new App({
   authorize: authorizeFn,
-  signingSecret: process.env.SLACK_SIGNING_SECRET
+  signingSecret: process.env.SLACK_SIGNING_SECRET,
+  receiver
 })
 
 // use CORS
-receiver.use(
+receiver.app.use(
   cors({
     origin: '*',
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
