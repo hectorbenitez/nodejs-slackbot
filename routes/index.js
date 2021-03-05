@@ -2,8 +2,8 @@
  * Routes
  */
 
-module.exports = (receiver) => {
-  require('./installApp')(receiver)
+module.exports = (app, receiver) => {
+  require('./installApp')(app, receiver)
   require('./api/v1/userTeams')(receiver)
   require('./api/v1/allTeams')(receiver)
   require('./api/v1/teamActivity')(receiver)

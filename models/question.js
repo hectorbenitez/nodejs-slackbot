@@ -4,7 +4,7 @@ const QuestionSchema = new Schema(
   {
     category: { type: String },
     question: { type: String },
-    answer: { type: String }
+    answer: { type: String },
   },
   {
     timestamps: true

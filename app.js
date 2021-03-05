@@ -36,7 +36,7 @@ receiver.app.use(
   })
 )
 
-require('./routes')(receiver)
+require('./routes')(app, receiver)
 require('./commands')(app)
 require('./actions')(app)
 
