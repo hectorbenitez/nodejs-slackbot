@@ -19,15 +19,18 @@ module.exports = (app) => {
     });
 
     const command = message.text;
-    const splitedCommand = command.split(" ");
+    const splitedCommand = command.replace(/\s/g,' ').split(" ");
     const startAction = splitedCommand[2];
     switch (startAction) {
       case startOptions.SURVEY:
-        say("Survey starting");
-
+        
         const surveyName = splitedCommand[3];
         const survey = await Survey.findOne({ surveyName });
-
+        if(!survey){
+          return await say("Survey not found");
+        }
+        await say("Survey starting");
+        
         let surveySession = await SurveySession.findOne({ slackUser: message.user, isCompleted: false });
         if (surveySession) {
           return await say('You are already answering a survey')
@@ -36,46 +39,16 @@ module.exports = (app) => {
         surveySession = new SurveySession();
         surveySession.slackUser = message.user;
         surveySession.survey = survey;
-        surveySession.questions = survey.questions.map(({ question }) => ({
+        surveySession.questions = survey.questions.map(({ question, type, context }) => ({
           question,
+          type,
+          context,
         }));
         surveySession.save();
 
         say({
           blocks: createBlockKitQuestion(surveySession.questions[0], 0)
         });
-
-        // const url = `${process.env.API_BASE_URL}/api/v1/surveyAnswers`;
-        // const data = {
-        //   userId: message.user,
-        //   surveyName: surveyName,
-        // };
-        // console.log(data, url);
-        // const surveySession = await SurveySession.findOne({
-        //   channel: channel._id,
-        // });
-        // fetch(url, {
-        //   method: "POST",
-        //   body: JSON.stringify(data),
-        //   headers: { "Content-Type": "application/json" },
-        // })
-        //   .then(async (res) => await res.json())
-        //   .then((json) => {
-        //     const survey = new Survey({
-        //       surveyName: json.survey.surveyName,
-        //       questions: json.survey.questions,
-        //       answerSurveyId: json._id,
-        //       surveyQuestions: json.questions,
-        //     });
-        //     survey.save();
-        //     surveySession.survey = survey;
-        //     surveySession.save();
-        //     say(
-        //       ` Q: ${survey.questions[0].question} A: |${survey.questions[0].answers} |`
-        //     );
-        //   })
-        //   .catch((error) => console.error(error));
-
         break;
 
       case startOptions.TRIVIA:

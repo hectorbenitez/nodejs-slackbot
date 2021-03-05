@@ -3,14 +3,40 @@ module.exports = {
 }
 
 function createBlockKitQuestion(question, index, answerSelected = null) {
-    const likertAnswers = [
-      "Never",
-      "Almost Never",
-      "Sometimes",
-      "Almost Always",
-      "Always",
-    ];
+  let answers = [
+    "Never",
+    "Almost Never",
+    "Sometimes",
+    "Almost Always",
+    "Always",
+  ];
+    
+  if(question.type === 'yes_no'){
+    answers = [
+     "Yes",
+     "No",
+   ]
+  }
   
+    const buttons = answers.map((answer, idx) => {
+      const button = {
+        type: "button",
+        action_id: `survey-answer-${idx}`,
+        value: `answer-${index}-${answer}`,
+        text: {
+          type: "plain_text",
+          emoji: true,
+          text: answer,
+        },
+      };
+
+      if(answerSelected === answer) {
+        button.style = 'primary'
+      }
+
+      return button;
+    });
+    
     return [
       {
         type: "section",
@@ -21,24 +47,7 @@ function createBlockKitQuestion(question, index, answerSelected = null) {
       },
       {
         type: "actions",
-        elements: likertAnswers.map((answer, idx) => {
-          const button = {
-            type: "button",
-            action_id: `survey-answer-${idx}`,
-            value: `answer-${index}-${answer}`,
-            text: {
-              type: "plain_text",
-              emoji: true,
-              text: answer,
-            },
-          };
-  
-          if(answerSelected === answer) {
-            button.style = 'primary'
-          }
-  
-          return button;
-        }),
+        elements: buttons,
       },
     ];
   }

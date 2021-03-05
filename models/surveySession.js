@@ -9,6 +9,8 @@ const SurveySessionSchema = new Schema(
     questions: [
       {
         question: { type: String },
+        type: {type: String},
+        context: {type: String},
         answer: { type: String },
       },
     ],

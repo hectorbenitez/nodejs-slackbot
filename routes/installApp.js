@@ -1,7 +1,7 @@
 const Team = require('../models/team')
 require('dotenv').config()
 
-module.exports = receiver => {
+module.exports = (app, receiver) => {
   receiver.router.get('/oauth/redirect', async (req, res) => {
     // console.log('It works!!!', req.query.code)
     const code = req.query.code
