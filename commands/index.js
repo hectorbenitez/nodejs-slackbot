@@ -11,4 +11,6 @@ module.exports = (app) => {
   require('./leaderboard')(app)
   require('./addQuestion')(app)
   require('./all')(app)
+  require('./broadcast')(app)
+  require('./sendSurvey')(app)
 }
