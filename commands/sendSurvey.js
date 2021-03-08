@@ -1,6 +1,6 @@
 const Survey = require("../models/survey");
 const SurveySession = require("../models/surveySession");
-const { createBlockKitQuestion } = require('./../services/blockKitBuilder');
+const { createBlockKitQuestion, createSurveyHeader } = require('./../services/blockKitBuilder');
 const { directMention } = require("@slack/bolt");
 
 
@@ -32,8 +32,14 @@ module.exports = (app) => {
     }));
     surveySession.save();
 
-    say('survey sent');
-    return await client.chat.postMessage({
+    await say('survey sent');
+
+    await client.chat.postMessage({
+      channel: userId,
+      blocks: createSurveyHeader(survey.surveyName, survey.welcomeMessage)
+    });
+
+    await client.chat.postMessage({
       channel: userId,
       blocks: createBlockKitQuestion(surveySession.questions[0], 0)
     });

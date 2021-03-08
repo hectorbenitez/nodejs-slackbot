@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const SurveySchema = new Schema(
     {
         surveyName: { type: String },
+        welcomeMessage: { type: String },
         questions: [
             {   
                 question: { type: String },

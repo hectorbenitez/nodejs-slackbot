@@ -3,7 +3,7 @@ const Question = require("../models/question");
 const TriviaGame = require("../models/triviaGame");
 const Survey = require("../models/survey");
 const SurveySession = require("../models/surveySession");
-const { createBlockKitQuestion } = require('./../services/blockKitBuilder');
+const { createBlockKitQuestion, createSurveyHeader } = require('./../services/blockKitBuilder');
 const { directMention } = require("@slack/bolt");
 
 const startOptions = Object.freeze({
@@ -47,7 +47,10 @@ module.exports = (app) => {
         surveySession.save();
 
         say({
-          blocks: createBlockKitQuestion(surveySession.questions[0], 0)
+          blocks: [
+            ...createSurveyHeader(survey.surveyName, survey.welcomeMessage),
+            ...createBlockKitQuestion(surveySession.questions[0], 0)
+          ]
         });
         break;
 

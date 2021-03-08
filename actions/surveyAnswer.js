@@ -1,7 +1,7 @@
 const Channel = require("../models/channel");
 const Question = require("../models/question");
 const SurveySession = require("../models/surveySession");
-const { createBlockKitQuestion } = require('./../services/blockKitBuilder');
+const { createBlockKitQuestion } = require("./../services/blockKitBuilder");
 
 module.exports = (app) => {
   app.action(
@@ -18,12 +18,18 @@ module.exports = (app) => {
         return say("You are not answering a survey");
       }
 
-      const answerValue = action.value.split('-');
+      const answerValue = action.value.split("-");
       const questionIndex = answerValue[1];
       const answer = answerValue[2];
-      
+      let requireNewQuestion = false;
+
       surveySession.questions[questionIndex].answer = answer;
-      surveySession.index++;
+
+      console.log(questionIndex, surveySession.index)
+      if (questionIndex == surveySession.index) {
+        surveySession.index++;
+        requireNewQuestion = true;
+      }
 
       if (surveySession.index === surveySession.questions.length) {
         surveySession.isCompleted = true;
@@ -51,14 +57,15 @@ module.exports = (app) => {
         return await say("Thanks!");
       }
 
-      const question = surveySession.questions[surveySession.index];
+      console.log(questionIndex, surveySession.index)
+      if (requireNewQuestion) {
+        const question = surveySession.questions[surveySession.index];
 
-      const message = await say({
-        blocks: createBlockKitQuestion(question, surveySession.index),
-      });
-      console.log("new message", message);
+        const message = await say({
+          blocks: createBlockKitQuestion(question, surveySession.index),
+        });
+        console.log("new message", message);
+      }
     }
   );
 };
-
-
