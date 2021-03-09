@@ -17,8 +17,8 @@ module.exports = (app) => {
     switch (startAction) {
       case startOptions.SURVEY:
         
-        const surveyName = splitedCommand[3];
-        const survey = await Survey.findOne({ surveyName });
+        const slug = splitedCommand[3];
+        const survey = await Survey.findOne({ slug });
         if(!survey){
           return await say("Survey not found");
         }
@@ -42,6 +42,8 @@ module.exports = (app) => {
               }
               surveySession = new SurveySession();
               surveySession.slackUser = member.id;
+              surveySession.userName = member.profile.real_name;
+              surveySession.userEmail = member.profile.email;
               surveySession.survey = survey;
               surveySession.questions = survey.questions.map(({ question, type, context }) => ({
                 question,

@@ -3,6 +3,8 @@ const Schema = mongoose.Schema;
 const SurveySessionSchema = new Schema(
   {
     slackUser: { type: String },
+    userName: { type: String },
+    userEmail: { type: String },
     survey: { type: Schema.Types.ObjectId, ref: "Survey" },
     index: { type: Number, default: 0 },
     isCompleted: { type: Boolean, default: false },
