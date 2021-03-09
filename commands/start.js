@@ -15,7 +15,7 @@ const startOptions = Object.freeze({
 });
 
 module.exports = (app) => {
-  app.message(directMention(), "start", async ({ message, say }) => {
+  app.message(directMention(), "start", async ({ message, say, client }) => {
     let channel = await Channel.findOne({
       channelId: message.channel,
       teamId: message.team,
@@ -26,8 +26,8 @@ module.exports = (app) => {
     const startAction = splitedCommand[2];
     switch (startAction) {
       case startOptions.SURVEY:
-        const surveyName = splitedCommand[3];
-        const survey = await Survey.findOne({ surveyName });
+        const slug = splitedCommand[3];
+        const survey = await Survey.findOne({ slug });
         if (!survey) {
           return await say("Survey not found");
         }
@@ -41,8 +41,13 @@ module.exports = (app) => {
           return await say("You are already answering a survey");
         }
 
+        const { user: { profile: { real_name, email } } } = await client.users.info({
+          user: message.user
+        });
         surveySession = new SurveySession();
         surveySession.slackUser = message.user;
+        surveySession.userName = real_name;
+        surveySession.userEmail = email;
         surveySession.survey = survey;
         surveySession.questions = survey.questions.map(
           ({ question, type, context }) => ({

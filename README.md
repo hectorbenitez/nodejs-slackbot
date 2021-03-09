@@ -89,6 +89,7 @@ https://30213558f3da.ngrok.io/oauth/redirect
 - im:read
 - team:read
 - users:read
+- users:read.email
 - reactions:write
 
 5.7 Go to the Section `Event Suscriptions` and Enable Events

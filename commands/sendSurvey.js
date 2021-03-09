@@ -7,41 +7,53 @@ const { directMention } = require("@slack/bolt");
 module.exports = (app) => {
   app.message(directMention(), "send-survey", async ({ message, say, client }) => {
     const command = message.text;
-    const splitedCommand = command.replace(/\s/g,' ').split(" ");
+    const splitedCommand = command.replace(/\s/g,' ').split(/\s+/);
 
-    const userId = splitedCommand[3].replace(/<|>|@/g, '');
-      
-    const surveyName = splitedCommand[2];
-    const survey = await Survey.findOne({ surveyName });
+    const slug = splitedCommand[2];
+    const survey = await Survey.findOne({ slug });
     if(!survey){
       return await say("Survey not found");
+    }    
+
+    const notSentTo = [];
+    const sentTo = [];
+    for(let i=3; i<splitedCommand.length; i++){
+      const userId = splitedCommand[i].replace(/<|>|@/g, '');
+      let surveySession = await SurveySession.findOne({ slackUser: userId, isCompleted: false });
+      if (surveySession) {
+        notSentTo.push(userId);
+        continue;
+      }
+      const { user: { profile: { real_name, email } } } = await client.users.info({
+        user: userId
+      });
+      surveySession = new SurveySession();
+      surveySession.slackUser = userId;
+      surveySession.userName = real_name;
+      surveySession.userEmail = email;
+      surveySession.survey = survey;
+      surveySession.questions = survey.questions.map(({ question, type, context }) => ({
+        question,
+        type,
+        context,
+      }));
+      surveySession.save();
+      await client.chat.postMessage({
+        channel: userId,
+        blocks: createSurveyHeader(survey.surveyName, survey.welcomeMessage)
+      });
+      await client.chat.postMessage({
+        channel: userId,
+        blocks: createBlockKitQuestion(surveySession, 0)
+      });
+      sentTo.push(userId);
     }
-
-
-    let surveySession = await SurveySession.findOne({ slackUser: userId, isCompleted: false });
-    if (surveySession) {
-      return await say('user already answering a survey');
+    if(sentTo.length){
+      await say(`survey sent to: ${sentTo.map(u => `<@${u}>`).join(' ')}`);
     }
-    surveySession = new SurveySession();
-    surveySession.slackUser = userId;
-    surveySession.survey = survey;
-    surveySession.questions = survey.questions.map(({ question, type, context }) => ({
-      question,
-      type,
-      context,
-    }));
-    surveySession.save();
-
-    await say('survey sent');
-
-    await client.chat.postMessage({
-      channel: userId,
-      blocks: createSurveyHeader(survey.surveyName, survey.welcomeMessage)
-    });
-
-    await client.chat.postMessage({
-      channel: userId,
-      blocks: createBlockKitQuestion(surveySession, 0)
-    });
+    if(notSentTo.length){
+      await say(`survey already started for users:  ${notSentTo.map(u => `<@${u}>`).join(' ')}`);
+    }
+    
   });
 };
