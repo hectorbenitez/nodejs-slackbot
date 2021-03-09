@@ -54,7 +54,7 @@ module.exports = (app) => {
       });
 
       if (surveySession.isCompleted) {
-        return await say("Thanks!");
+        return await say('Thank you to completing the survey! We really appreciate your time. If you have any feedback, let us know <@UFDF3F8GN> or <@U01DD27GE0J>');
       }
 
       console.log(questionIndex, surveySession.index)
