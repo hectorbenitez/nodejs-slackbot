@@ -8,7 +8,7 @@ function createSurveyHeader(surveyName, welcomeMessage) {
     {
       type: "header",
       text: {
-        type: "mrkdwn",
+        type: "plain_text",
         text: surveyName,
       },
     },

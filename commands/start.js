@@ -29,7 +29,7 @@ module.exports = (app) => {
         const slug = splitedCommand[3];
         const survey = await Survey.findOne({ slug });
         if (!survey) {
-          return await say("Survey not found");
+          return await say(`Survey not found ${ slug }`);
         }
         await say("Survey starting");
 
