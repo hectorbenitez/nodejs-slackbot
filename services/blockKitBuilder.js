@@ -43,7 +43,9 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
     "Always",
   ];
 
+  index = parseInt(index)
   const question = surveySession.questions[index]
+
   if (question.type === "yes_no") {
     answers = ["Yes", "No"];
   }
@@ -79,10 +81,6 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
       },
     },
     {
-      type: "actions",
-      elements: buttons,
-    },
-    {
 			"type": "context",
 			"elements": [
 				{
@@ -90,6 +88,10 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
 					"text": `Question ${index + 1} out of ${surveySession.questions.length}`
 				}
 			]
-		}
+		},
+    {
+      type: "actions",
+      elements: buttons,
+    }
   ];
 }
