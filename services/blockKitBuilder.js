@@ -43,11 +43,11 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
     "Always",
   ];
 
+  const question = surveySession.questions[index]
   if (question.type === "yes_no") {
     answers = ["Yes", "No"];
   }
 
-  const question = surveySession.questions[index]
   const buttons = answers.map((answer, idx) => {
     const button = {
       type: "button",
