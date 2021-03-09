@@ -8,7 +8,7 @@ function createSurveyHeader(surveyName, welcomeMessage) {
     {
       type: "header",
       text: {
-        type: "plain_text",
+        type: "mrkdwn",
         text: surveyName,
       },
     },
@@ -16,7 +16,7 @@ function createSurveyHeader(surveyName, welcomeMessage) {
       type: "context",
       elements: [
         {
-          text: "People & Culture Team Announcements",
+          text: "Thank you for taking the time to complete this survey.",
           type: "mrkdwn",
         },
       ],
