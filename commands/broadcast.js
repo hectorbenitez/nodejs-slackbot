@@ -52,7 +52,7 @@ module.exports = (app) => {
   
               msgPromises.push(client.chat.postMessage({
                 channel: member.id,
-                blocks: createBlockKitQuestion(surveySession.questions[0], 0)
+                blocks: createBlockKitQuestion(surveySession, 0)
               }));
             }
           }

@@ -34,7 +34,7 @@ function createSurveyHeader(surveyName, welcomeMessage) {
   ];
 }
 
-function createBlockKitQuestion(question, index, answerSelected = null) {
+function createBlockKitQuestion(surveySession, index, answerSelected = null) {
   let answers = [
     "Never",
     "Almost Never",
@@ -47,11 +47,12 @@ function createBlockKitQuestion(question, index, answerSelected = null) {
     answers = ["Yes", "No"];
   }
 
+  const question = surveySession.questions[index]
   const buttons = answers.map((answer, idx) => {
     const button = {
       type: "button",
       action_id: `survey-answer-${idx}`,
-      value: `answer-${index}-${answer}`,
+      value: `answer-${surveySession._id}-${index}-${answer}`,
       text: {
         type: "plain_text",
         emoji: true,
@@ -81,5 +82,14 @@ function createBlockKitQuestion(question, index, answerSelected = null) {
       type: "actions",
       elements: buttons,
     },
+    {
+			"type": "context",
+			"elements": [
+				{
+					"type": "mrkdwn",
+					"text": `Question ${index + 1} out of ${surveySession.questions.length}`
+				}
+			]
+		}
   ];
 }

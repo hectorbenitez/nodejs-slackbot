@@ -19,8 +19,8 @@ module.exports = (app) => {
       }
 
       const answerValue = action.value.split("-");
-      const questionIndex = answerValue[1];
-      const answer = answerValue[2];
+      const questionIndex = answerValue[2];
+      const answer = answerValue[3];
       let requireNewQuestion = false;
 
       surveySession.questions[questionIndex].answer = answer;
@@ -40,7 +40,7 @@ module.exports = (app) => {
         channel: body.channel.id,
         ts: body.message.ts,
         blocks: createBlockKitQuestion(
-          surveySession.questions[questionIndex],
+          surveySession,
           questionIndex,
           answer
         ),
@@ -59,10 +59,8 @@ module.exports = (app) => {
 
       console.log(questionIndex, surveySession.index)
       if (requireNewQuestion) {
-        const question = surveySession.questions[surveySession.index];
-
         const message = await say({
-          blocks: createBlockKitQuestion(question, surveySession.index),
+          blocks: createBlockKitQuestion(surveySession, surveySession.index),
         });
         console.log("new message", message);
       }

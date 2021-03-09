@@ -41,7 +41,7 @@ module.exports = (app) => {
 
     await client.chat.postMessage({
       channel: userId,
-      blocks: createBlockKitQuestion(surveySession.questions[0], 0)
+      blocks: createBlockKitQuestion(surveySession, 0)
     });
   });
 };
