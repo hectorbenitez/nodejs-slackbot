@@ -7,7 +7,6 @@ module.exports = (app) => {
   app.action(
     /survey-answer-(\d)/,
     async ({ ack, body, action, context, say, client }) => {
-      console.log("data=====");
       console.log(body, action, context);
       await ack();
 

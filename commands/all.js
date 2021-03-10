@@ -9,11 +9,6 @@ const { createBlockKitQuestion } = require("./../services/blockKitBuilder");
 
 module.exports = app => {
   app.message(/.+/, async ({ message, say, context, client }) => {
-
-    console.log("inside all=====");
-    console.log("message====",message);
-    console.log("context====",message);
-
     const activeSurvey = await SurveySession.findOne({
       slackUser: message.user,
       isCompleted: false 
@@ -21,7 +16,6 @@ module.exports = app => {
 
 
     if(activeSurvey){
-      console.log('surveySession=========', activeSurvey);
       const questionIndex = activeSurvey.index;
       if(activeSurvey.questions[questionIndex].type === 'free_text'){
         activeSurvey.questions[questionIndex].answer = message.text;
