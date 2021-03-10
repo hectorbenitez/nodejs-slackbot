@@ -62,9 +62,11 @@ module.exports = (app) => {
           blocks: createSurveyHeader(survey.surveyName, survey.welcomeMessage),
         });
 
-        await say({
+        const result = await say({
           blocks: createBlockKitQuestion(surveySession, 0),
         });
+        surveySession.questions[0].ts = result.ts;
+        surveySession.save();
         break;
 
       case startOptions.TRIVIA:

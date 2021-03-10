@@ -50,6 +50,10 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
     answers = ["Yes", "No"];
   }
 
+  if (question.type === "free_text") {
+    answers = [];
+  }
+
   const buttons = answers.map((answer, idx) => {
     const button = {
       type: "button",
@@ -72,7 +76,7 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
   let questionText = question.context || "Question:";
   questionText += ` ${question.question}`;
 
-  return [
+  const block = [
     {
       type: "section",
       text: {
@@ -89,9 +93,20 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
 				}
 			]
 		},
-    {
+  ];
+  if(buttons.length){
+    block.push({
       type: "actions",
       elements: buttons,
-    }
-  ];
+    });
+  }else if(answerSelected){
+    block.push({
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: answerSelected,
+      },
+    });
+  }
+  return block;
 }

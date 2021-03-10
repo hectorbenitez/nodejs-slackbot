@@ -7,6 +7,7 @@ module.exports = (app) => {
   app.action(
     /survey-answer-(\d)/,
     async ({ ack, body, action, context, say, client }) => {
+      console.log("data=====");
       console.log(body, action, context);
       await ack();
 
@@ -62,6 +63,8 @@ module.exports = (app) => {
         const message = await say({
           blocks: createBlockKitQuestion(surveySession, surveySession.index),
         });
+        surveySession.questions[surveySession.index].ts = message.ts;
+        surveySession.save();
         console.log("new message", message);
       }
     }

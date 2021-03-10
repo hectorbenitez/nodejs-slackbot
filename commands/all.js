@@ -4,10 +4,63 @@ const TriviaGame = require('../models/triviaGame')
 const SurveySession = require('../models/surveySession')
 const Survey = require('../models/survey')
 const fetch = require('node-fetch');
+const { createBlockKitQuestion } = require("./../services/blockKitBuilder");
 // const noDirectMention = require('../middlewares/noDirectMention')
 
 module.exports = app => {
-  app.message(/.+/, async ({ message, say, context }) => {
+  app.message(/.+/, async ({ message, say, context, client }) => {
+
+    console.log("inside all=====");
+    console.log("message====",message);
+    console.log("context====",message);
+
+    const activeSurvey = await SurveySession.findOne({
+      slackUser: message.user,
+      isCompleted: false 
+    }).populate("survey")
+
+
+    if(activeSurvey){
+      console.log('surveySession=========', activeSurvey);
+      const questionIndex = activeSurvey.index;
+      if(activeSurvey.questions[questionIndex].type === 'free_text'){
+        activeSurvey.questions[questionIndex].answer = message.text;
+        activeSurvey.index++;
+        if (activeSurvey.index === activeSurvey.questions.length) {
+          activeSurvey.isCompleted = true;
+        }
+        await activeSurvey.save();
+
+        console.log({
+          channel: message.channel,
+          ts: message.ts,
+        });
+        await client.chat.update({
+          channel: message.channel,
+          ts: activeSurvey.questions[questionIndex].ts,
+          blocks: createBlockKitQuestion(
+            activeSurvey,
+            questionIndex,
+            message.text
+          ),
+        });
+  
+        if (activeSurvey.isCompleted) {
+          return await say("Thanks!");
+        }
+  
+        if (!activeSurvey.isCompleted) {
+          const message = await say({
+            blocks: createBlockKitQuestion(activeSurvey, activeSurvey.index),
+          });
+          activeSurvey.questions[activeSurvey.index].ts = message.ts;
+          activeSurvey.save();
+          console.log("new message", message);
+        }
+      }
+      return;
+    }
+
     let channel = await Channel.findOne({
       channelId: message.channel,
       teamId: message.team
@@ -65,7 +118,6 @@ module.exports = app => {
     }
 
     if (survey.questions[0].answers.includes(message.text)) {
-      console.log(surveySession);
       
       const url = "http://localhost:3005/api/v1/surveyAnswers/saveAnswer"
       const data = {
