@@ -10,6 +10,7 @@ const SurveySessionSchema = new Schema(
     isCompleted: { type: Boolean, default: false },
     questions: [
       {
+        ts:{ type: String },
         question: { type: String },
         type: {type: String},
         context: {type: String},

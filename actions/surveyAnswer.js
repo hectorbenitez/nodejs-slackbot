@@ -62,6 +62,8 @@ module.exports = (app) => {
         const message = await say({
           blocks: createBlockKitQuestion(surveySession, surveySession.index),
         });
+        surveySession.questions[surveySession.index].ts = message.ts;
+        surveySession.save();
         console.log("new message", message);
       }
     }

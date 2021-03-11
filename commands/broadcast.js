@@ -31,9 +31,8 @@ module.exports = (app) => {
           });
           cursor = membersRequest.response_metadata.next_cursor;
     
-          let member;
           for(let i=0; i<membersRequest.members.length;i++){
-            member = membersRequest.members[i];
+            const member = membersRequest.members[i];
             if(!member.is_bot && !member.is_app_user && member.name !== 'slackbot'){
               let surveySession = await SurveySession.findOne({ slackUser: member.id, isCompleted: false });
               if (surveySession) {
@@ -55,6 +54,9 @@ module.exports = (app) => {
               msgPromises.push(client.chat.postMessage({
                 channel: member.id,
                 blocks: createBlockKitQuestion(surveySession, 0)
+              }).then(result => {
+                surveySession.questions[0].ts = result.ts;
+                surveySession.save();
               }));
             }
           }

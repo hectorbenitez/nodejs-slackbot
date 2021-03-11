@@ -42,10 +42,12 @@ module.exports = (app) => {
         channel: userId,
         blocks: createSurveyHeader(survey.surveyName, survey.welcomeMessage)
       });
-      await client.chat.postMessage({
+      const result = await client.chat.postMessage({
         channel: userId,
         blocks: createBlockKitQuestion(surveySession, 0)
       });
+      surveySession.questions[0].ts = result.ts;
+      surveySession.save();
       sentTo.push(userId);
     }
     if(sentTo.length){
