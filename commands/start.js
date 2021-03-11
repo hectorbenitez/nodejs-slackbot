@@ -50,10 +50,11 @@ module.exports = (app) => {
         surveySession.userEmail = email;
         surveySession.survey = survey;
         surveySession.questions = survey.questions.map(
-          ({ question, type, context }) => ({
+          ({ question, type, context, condition }) => ({
             question,
             type,
             context,
+            condition
           })
         );
         surveySession.save();

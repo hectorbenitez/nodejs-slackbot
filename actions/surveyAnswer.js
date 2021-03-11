@@ -2,6 +2,7 @@ const Channel = require("../models/channel");
 const Question = require("../models/question");
 const SurveySession = require("../models/surveySession");
 const { createBlockKitQuestion } = require("./../services/blockKitBuilder");
+const { getNextIndex } = require('./../services/surveySessionManager');
 
 module.exports = (app) => {
   app.action(
@@ -27,7 +28,7 @@ module.exports = (app) => {
 
       console.log(questionIndex, surveySession.index)
       if (questionIndex == surveySession.index) {
-        surveySession.index++;
+        surveySession.index = getNextIndex(surveySession);
         requireNewQuestion = true;
       }
 
