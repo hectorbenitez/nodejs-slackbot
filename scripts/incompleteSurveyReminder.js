@@ -1,32 +1,18 @@
-const { App } = require('@slack/bolt')
+const { WebClient } = require('@slack/web-api')
 const mongoose = require('mongoose')
 const Team = require('../models/team')
 const Survey = require('../models/survey')
 const SurveySession = require('../models/surveySession')
 const { createSurveyReminder } = require('../services/blockKitBuilder');
 require('dotenv').config()
+
 // Mongoose connection
-
-const authorizeFn = async ({ teamId, enterpriseId }) => {
-  return Team.findOne({ teamId, enterpriseId }).then(team => {
-    return {
-      botToken: team.accessToken,
-      botId: team.botId,
-      botUserId: team.botUserId
-    }
-  })
-}
-
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
 .then(async () => {
-    // Initialize app with our signing secret
-    const app = new App({
-      signingSecret: process.env.SLACK_SIGNING_SECRET,
-      token: process.env.SLACK_BOT_TOKEN,
-    })
+    const slackClient = new WebClient();
 
     const tolerance = process.env.REMINDER_TOLERANCE || 86400000; // one day
     const threshold = new Date(new Date().getTime() - tolerance);
@@ -40,7 +26,8 @@ mongoose.connect(process.env.MONGODB_URI, {
   
     const promises = incompleteSurveys.map(surveySession => {
       const percentage = Math.round(surveySession.index * 100 / surveySession.questions.length);
-      return app.client.chat.postMessage({
+      
+      return slackClient.chat.postMessage({
           channel: surveySession.slackUser,
           blocks: createSurveyReminder(surveySession.survey.reminderMessage, `${percentage}%`),
           token: surveySession.survey.team.accessToken
