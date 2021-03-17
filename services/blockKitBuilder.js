@@ -1,6 +1,7 @@
 module.exports = {
   createSurveyHeader,
   createBlockKitQuestion,
+  createSurveyReminder,
 };
 
 function createSurveyHeader(surveyName, welcomeMessage) {
@@ -99,7 +100,7 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
       type: "actions",
       elements: buttons,
     });
-  }else if(answerSelected){
+  }else if(answerSelected){ // this applies for free text questions, there are no buttons and the answer selected is the text to put in place 
     block.push({
       type: "section",
       text: {
@@ -109,4 +110,25 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
     });
   }
   return block;
+}
+
+function createSurveyReminder(reminderMessage, percentage) {
+  return [
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: reminderMessage,
+      },
+    },
+    {
+			type: "context",
+			elements: [
+				{
+					"type": "mrkdwn",
+					"text": `Current progress ${percentage}`
+				}
+			]
+		},
+  ];
 }

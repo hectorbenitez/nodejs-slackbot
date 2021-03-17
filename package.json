@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --inspect app.js",
-    "start": "node app.js"
+    "start": "node app.js",
+    "reminder": "node scripts/incompleteSurveyReminder.js"
   },
   "repository": {
     "type": "git",

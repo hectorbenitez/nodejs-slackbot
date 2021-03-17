@@ -6,6 +6,8 @@ const SurveySchema = new Schema(
     surveyName: { type: String },
     slug: { type: String },
     welcomeMessage: { type: String },
+    reminderMessage: { type: String },
+    team: { type: Schema.Types.ObjectId, ref: "Team" },
     questions: [
       {
         question: { type: String },
