@@ -8,7 +8,7 @@ module.exports = (app) => {
   app.action(
     /survey-answer-(\d)/,
     async ({ ack, body, action, context, say, client }) => {
-      console.log(body, action, context);
+      // console.log(body, action, context);
       await ack();
 
       const surveySession = await SurveySession.findOne({
@@ -26,7 +26,7 @@ module.exports = (app) => {
 
       surveySession.questions[questionIndex].answer = answer;
 
-      console.log(questionIndex, surveySession.index)
+      // console.log(questionIndex, surveySession.index)
       if (questionIndex == surveySession.index) {
         surveySession.index = getNextIndex(surveySession);
         requireNewQuestion = true;
@@ -47,12 +47,12 @@ module.exports = (app) => {
         ),
       });
 
-      console.log({
-        channel: body.channel.id,
-        ts: body.message.ts,
-        text: "Updated",
-        result,
-      });
+      // console.log({
+      //   channel: body.channel.id,
+      //   ts: body.message.ts,
+      //   text: "Updated",
+      //   result,
+      // });
 
       if (surveySession.isCompleted) {
         return await say('Thank you to completing the survey! We really appreciate your time. If you have any feedback, let us know <@UFDF3F8GN> or <@U01DD27GE0J>');

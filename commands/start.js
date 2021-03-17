@@ -2,11 +2,7 @@ const Channel = require("../models/channel");
 const Question = require("../models/question");
 const TriviaGame = require("../models/triviaGame");
 const Survey = require("../models/survey");
-const SurveySession = require("../models/surveySession");
-const {
-  createBlockKitQuestion,
-  createSurveyHeader,
-} = require("./../services/blockKitBuilder");
+const { startSurvey, saySurveyStartResult } = require("../services/surveyManager");
 const { directMention } = require("@slack/bolt");
 
 const startOptions = Object.freeze({
@@ -31,43 +27,12 @@ module.exports = (app) => {
         if (!survey) {
           return await say(`Survey not found ${ slug }`);
         }
-        await say("Survey starting");
 
-        let surveySession = await SurveySession.findOne({
-          slackUser: message.user,
-          isCompleted: false,
-        });
-        if (surveySession) {
-          return await say("You are already answering a survey");
-        }
-
-        const { user: { profile: { real_name, email } } } = await client.users.info({
+        const { user } = await client.users.info({
           user: message.user
         });
-        surveySession = new SurveySession();
-        surveySession.slackUser = message.user;
-        surveySession.userName = real_name;
-        surveySession.userEmail = email;
-        surveySession.survey = survey;
-        surveySession.questions = survey.questions.map(
-          ({ question, type, context, condition }) => ({
-            question,
-            type,
-            context,
-            condition
-          })
-        );
-        surveySession.save();
-
-        await say({
-          blocks: createSurveyHeader(survey.surveyName, survey.welcomeMessage),
-        });
-
-        const result = await say({
-          blocks: createBlockKitQuestion(surveySession, 0),
-        });
-        surveySession.questions[0].ts = result.ts;
-        surveySession.save();
+        const { result } = await startSurvey({survey, user, slackClient: client});
+        saySurveyStartResult({result, say })
         break;
 
       case startOptions.TRIVIA:

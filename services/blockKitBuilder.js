@@ -74,8 +74,7 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
     return button;
   });
 
-  let questionText = question.context || "Question:";
-  questionText += ` ${question.question}`;
+  const questionText = `${question.emoji ? question.emoji : ''} *Question:* ${question.question}`;
 
   const block = [
     {
@@ -95,6 +94,15 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
 			]
 		},
   ];
+  if(question.context){
+    block.unshift({
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: question.context,
+      },
+    });
+  }
   if(buttons.length){
     block.push({
       type: "actions",
