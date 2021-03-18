@@ -1,7 +1,5 @@
-const Channel = require("../models/channel");
 const Survey = require("../models/survey");
-const SurveySession = require("../models/surveySession");
-const { createBlockKitQuestion } = require('./../services/blockKitBuilder');
+const { startSurvey, saySurveyStartResults } = require("../services/surveyManager");
 const { directMention } = require("@slack/bolt");
 
 const startOptions = Object.freeze({
@@ -30,51 +28,20 @@ module.exports = (app) => {
             cursor 
           });
           cursor = membersRequest.response_metadata.next_cursor;
-    
           for(let i=0; i<membersRequest.members.length;i++){
-            const member = membersRequest.members[i];
-            if(!member.is_bot && !member.is_app_user && member.name !== 'slackbot'){
-              let surveySession = await SurveySession.findOne({ slackUser: member.id, isCompleted: false });
-              if (surveySession) {
-                console.log("member has one started", member.id)
-                return;
-              }
-              surveySession = new SurveySession();
-              surveySession.slackUser = member.id;
-              surveySession.userName = member.profile.real_name;
-              surveySession.userEmail = member.profile.email;
-              surveySession.survey = survey;
-              surveySession.questions = survey.questions.map(({ question, type, context }) => ({
-                question,
-                type,
-                context,
-              }));
-              surveySession.save();
-  
-              msgPromises.push(client.chat.postMessage({
-                channel: member.id,
-                blocks: createBlockKitQuestion(surveySession, 0)
-              }).then(result => {
-                surveySession.questions[0].ts = result.ts;
-                surveySession.save();
-              }));
+            const user = membersRequest.members[i];
+            if(!user.is_bot && !user.is_app_user && user.name !== 'slackbot'){
+              msgPromises.push(startSurvey({survey, user, slackClient: client}));
             }
           }
         }while(cursor && cursor.length)
-        say("Survey starting for all");
-        await Promise.all(msgPromises);
+        const result = await Promise.all(msgPromises);
+        saySurveyStartResults({result, say});
         break;
-
       default:
         say("Command not found, try trivia or survey");
         break;
     }
 
-
-
-
-
-    
-    
   });
 };
