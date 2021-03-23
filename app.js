@@ -1,8 +1,11 @@
 const { App, ExpressReceiver } = require('@slack/bolt')
+const express = require('express')
 const mongoose = require('mongoose')
 const Team = require('./models/team')
 const cors = require('cors')
+
 require('dotenv').config()
+
 // Mongoose connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
@@ -20,6 +23,7 @@ const authorizeFn = async ({ teamId, enterpriseId }) => {
 }
 
 const receiver = new ExpressReceiver({ signingSecret: process.env.SLACK_SIGNING_SECRET });
+receiver.router.use(express.json());
 
 // Initialize app with our signing secret
 const app = new App({
@@ -28,6 +32,17 @@ const app = new App({
   receiver
 })
 
+
+receiver.router.post('/', function(req, res) {
+  console.log('router', req)
+  res.send(req.body)
+})
+
+// router.post('/', function(req, res) {
+//   console.log('router', req)
+//   res.send(req.body)
+// })
+
 // use CORS
 receiver.app.use(
   cors({
@@ -35,6 +50,8 @@ receiver.app.use(
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
   })
 )
+
+// receiver.app.use('/api', router)
 
 require('./routes')(app, receiver)
 require('./commands')(app)

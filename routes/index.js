@@ -12,4 +12,9 @@ module.exports = (app, receiver) => {
   receiver.router.get('/', (req, res) => {
     res.send('ok')
   })
+
+  // receiver.router.post('/', (req, res) => {
+  //   console.log(req, receiver.router)
+  //   res.send(req._body)
+  // })
 }
