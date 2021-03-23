@@ -11,12 +11,5 @@ module.exports = (app, receiver) => {
   require('./api/v1/teamActivity')(receiver)
   require('./api/v1/teamScore')(receiver)
 
-  receiver.router.get('/', (req, res) => {
-    res.send('ok')
-  })
-
-  // receiver.router.post('/', (req, res) => {
-  //   console.log(req, receiver.router)
-  //   res.send(req._body)
-  // })
+  require('./api/v1/surveySessions')(receiver)
 }
