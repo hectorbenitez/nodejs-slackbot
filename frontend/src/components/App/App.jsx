@@ -2,13 +2,15 @@ import React from 'react'
 import SlackLogin from 'react-slack-login'
 
 function App() {
-    console.log(process.env)
-    const onSuccess = () => {}
+    console.log(process.env, 'hola')
+    const onSuccess = response => {
+        console.log(response)
+    }
 
     return <SlackLogin
-    redirectUrl='https://butler-hector.ngrok.io/oauth/login'
+    redirectUrl={process.env.SLACK_LOGIN_URI}
     onSuccess={onSuccess}
-    slackClientId={process.env.REACT_APP_SLACK_CLIENT_ID}
+    slackClientId={process.env.SLACK_CLIENT_ID}
     slackUserScope='identity.basic'
   />
 }

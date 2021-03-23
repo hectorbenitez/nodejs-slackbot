@@ -24,6 +24,8 @@ const authorizeFn = async ({ teamId, enterpriseId }) => {
 
 const receiver = new ExpressReceiver({ signingSecret: process.env.SLACK_SIGNING_SECRET });
 receiver.router.use(express.json());
+receiver.router.use(cors());
+receiver.router.use(express.static('frontend/build'));
 
 // Initialize app with our signing secret
 const app = new App({
@@ -42,14 +44,6 @@ receiver.router.post('/', function(req, res) {
 //   console.log('router', req)
 //   res.send(req.body)
 // })
-
-// use CORS
-receiver.app.use(
-  cors({
-    origin: '*',
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE'
-  })
-)
 
 // receiver.app.use('/api', router)
 
