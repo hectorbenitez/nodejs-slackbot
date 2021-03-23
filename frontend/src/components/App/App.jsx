@@ -1,18 +1,20 @@
 import React from 'react'
-import SlackLogin from 'react-slack-login'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import Dashboard from '../../pages/Dashboard'
+
+import Login from '../../pages/Login'
 
 function App() {
-    console.log(process.env, 'hola')
-    const onSuccess = response => {
-        console.log(response)
-    }
-
-    return <SlackLogin
-    redirectUrl={process.env.SLACK_LOGIN_URI}
-    onSuccess={onSuccess}
-    slackClientId={process.env.SLACK_CLIENT_ID}
-    slackUserScope='identity.basic'
-  />
+    return <BrowserRouter>
+        <Switch>
+            <Route path='/dashboard'>
+                <Dashboard></Dashboard>
+            </Route>
+            <Route path='/'>
+                <Login></Login>
+            </Route>
+        </Switch>
+    </BrowserRouter>
 }
 
 export default App

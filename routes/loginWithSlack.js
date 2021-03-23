@@ -23,6 +23,8 @@ module.exports = (app, receiver) => {
             process.env.JWT_SECRET
           );
 
+          console.log('VERIFY', jwt.verify(token, process.env.JWT_SECRET))
+
           return res.json({
             token,
           });
