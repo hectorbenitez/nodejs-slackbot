@@ -38,22 +38,17 @@ function Dashboard() {
             <Table striped bordered>
               <thead>
                 <tr>
-                  <th>Session ID</th>
                   <th>User Name</th>
                   <th>Survey</th>
                   <th>Created at</th>
                   <th>Progress</th>
+                  <th>Answers</th>
                 </tr>
               </thead>
               <tbody>
                 {sessions.map((session) => {
                   return (
                     <tr>
-                      <th scope="row">
-                        <Link to={`surveySessions/${session._id}`}>
-                          {session._id}
-                        </Link>
-                      </th>
                       <td>{session.userName}</td>
                       <td>{session.survey.surveyName}</td>
                       <td>{session.createdAt}</td>
@@ -64,6 +59,11 @@ function Dashboard() {
                               (session.index * 100) / session.questions.length
                             )}%`}
                       </td>
+                      <th scope="row">
+                        <Link to={`surveySessions/${session._id}`}>
+                          See Answers
+                        </Link>
+                      </th>
                     </tr>
                   );
                 })}
