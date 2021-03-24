@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --inspect app.js",
-    "dev:client": "webpack --watch",
+    "dev:client": "NODE_ENV=development webpack --watch",
     "build": "webpack --mode production",
     "start": "node app.js",
     "reminder": "node scripts/incompleteSurveyReminder.js"

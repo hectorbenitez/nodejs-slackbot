@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import axios from "axios";
-import { Table } from "reactstrap";
+import { Container, Table } from "reactstrap";
 
 function SurveySession() {
   const params = useParams();
@@ -17,7 +17,7 @@ function SurveySession() {
   }
 
   return (
-    <div>
+    <Container>
       <Link to={`/dashboard`}>dashboard</Link>
       <h3>Session {session._id}</h3>
       <h1>User: {session.userName}</h1>
@@ -45,7 +45,7 @@ function SurveySession() {
           );
         })}
       </Table>
-    </div>
+    </Container>
   );
 }
 
