@@ -4,13 +4,16 @@ import Dashboard from '../../pages/Dashboard'
 
 import Login from '../../pages/Login'
 import SurveySession from '../../pages/SurveySession'
-import SurveySessions from '../../pages/SurveySessions'
+import Surveys from '../../pages/Surveys'
 
 function App() {
     return <BrowserRouter>
         <Switch>
             <Route path='/surveySessions/:id'>
                 <SurveySession></SurveySession>
+            </Route>
+            <Route path='/surveys'>
+                <Surveys></Surveys>
             </Route>
             <Route path='/dashboard'>
                 <Dashboard></Dashboard>

@@ -12,4 +12,5 @@ module.exports = (app, receiver) => {
   require('./api/v1/teamScore')(receiver)
 
   require('./api/v1/surveySessions')(receiver)
+  require('./api/v1/surveys')(receiver)
 }

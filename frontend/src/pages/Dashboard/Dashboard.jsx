@@ -42,6 +42,7 @@ function Dashboard() {
       <DeleteSessionModal isOpen={deleteModalState.isOpen} session={deleteModalState.session} closeModal={() => setDeleteModalState({...deleteModalState, isOpen: false})}/>
       <Navbar color="light" light expand="md">
         <NavbarBrand href="/dashboard">Encora Butler</NavbarBrand>
+        <Link to="/surveys">Surveys</Link>
       </Navbar>
       <Container style={{ paddingTop: 20 }}>
         <Row>
