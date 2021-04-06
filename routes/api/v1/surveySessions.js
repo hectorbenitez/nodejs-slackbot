@@ -7,7 +7,7 @@ module.exports = (receiver) => {
       console.log("sessions=====", sessions);
       res.json(sessions);
     } catch (error) {
-      console.error("command score:", error);
+      console.error("get sessions error", error);
       res.status(500).send("Internal Server Error");
     }
   });
@@ -17,6 +17,16 @@ module.exports = (receiver) => {
       const sessions = await SurveySession.findById(req.params.id).populate(
         "survey"
       );
+      res.json(sessions);
+    } catch (error) {
+      console.error("get session error", error);
+      res.status(500).send("Internal Server Error");
+    }
+  });
+
+  receiver.router.delete("/api/v1/surveySessions/:id", async (req, res) => {
+    try {
+      const deleted = await SurveySession.deleteOne({_id: req.params.id});
       res.json(sessions);
     } catch (error) {
       console.error("command score:", error);

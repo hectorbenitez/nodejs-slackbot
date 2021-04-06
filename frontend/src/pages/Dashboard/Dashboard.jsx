@@ -2,23 +2,36 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import { Container, Table, Navbar, NavbarBrand, Row, Col, Spinner } from "reactstrap";
+import { FaTrash } from 'react-icons/fa';
+import DeleteSessionModal from "../../components/DeleteSessionModal/DeleteSessionModal";
 
 function Dashboard() {
   const [sessions, setSessions] = useState([]);
   const [stats, setStats] = useState({});
+  const [deleteModalState, setDeleteModalState] = useState({isOpen: false, session: null})
 
   useEffect(async () => {
-    const response = await axios.get("/api/v1/surveySessions");
-    const sessions = response.data;
+    if(!deleteModalState.isOpen){
+      const response = await axios.get("/api/v1/surveySessions");
+      const sessions = response.data;
 
-    setSessions(sessions);
+      setSessions(sessions);
 
-    const completedSessions = sessions.filter(session => session.isCompleted)
-    setStats({
-      total: sessions.length,
-      completed: completedSessions.length
+      const completedSessions = sessions.filter(session => session.isCompleted)
+      setStats({
+        total: sessions.length,
+        completed: completedSessions.length
+      })
+    }
+  }, [deleteModalState]);
+
+  const handlerOnDelete = (session) => {
+    setDeleteModalState({
+      ...deleteModalState,
+      isOpen: true,
+      session: session
     })
-  }, []);
+  }
 
   if(sessions.length === 0) {
     return <Spinner color="primary" />
@@ -26,6 +39,7 @@ function Dashboard() {
 
   return (
     <div>
+      <DeleteSessionModal isOpen={deleteModalState.isOpen} session={deleteModalState.session} closeModal={() => setDeleteModalState({...deleteModalState, isOpen: false})}/>
       <Navbar color="light" light expand="md">
         <NavbarBrand href="/dashboard">Encora Butler</NavbarBrand>
       </Navbar>
@@ -43,12 +57,13 @@ function Dashboard() {
                   <th>Created at</th>
                   <th>Progress</th>
                   <th>Answers</th>
+                  <th></th>
                 </tr>
               </thead>
               <tbody>
                 {sessions.map((session) => {
                   return (
-                    <tr>
+                    <tr key={session._id}>
                       <td>{session.userName}</td>
                       <td>{session.survey.surveyName}</td>
                       <td>{session.createdAt}</td>
@@ -64,6 +79,7 @@ function Dashboard() {
                           See Answers
                         </Link>
                       </th>
+                      <td><FaTrash style={{color: 'red', cursor: 'pointer'}} onClick={()=> handlerOnDelete(session)}/></td>
                     </tr>
                   );
                 })}
