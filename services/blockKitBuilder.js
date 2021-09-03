@@ -43,6 +43,7 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
     "Almost Always",
     "Always",
   ];
+  let radioButtonsOptions = [];
 
   index = parseInt(index)
   const question = surveySession.questions[index]
@@ -53,6 +54,11 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
 
   if (question.type === "free_text") {
     answers = [];
+  }
+
+  if (question.type === "radio_buttons") {
+    answers = [];
+    radioButtonsOptions = ["1 (NEVER)","2","3","4","5","6","7","8","9","10 (ALL THE TIME)"]
   }
 
   const buttons = answers.map((answer, idx) => {
@@ -74,6 +80,18 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
     return button;
   });
 
+  const radioButtons = {
+    type:"radio_buttons",
+    action_id: `survey-answer-${index}`,
+    options: radioButtonsOptions.map((option) => ({
+      value: `answer-${surveySession._id}-${index}-${option}`,
+      text: {
+        type: "plain_text",
+        emoji: true,
+        text: option,
+      },
+    }))
+  };
   const questionText = `${question.emoji ? question.emoji : ''} *Question:* ${question.question}`;
 
   const block = [
@@ -108,6 +126,8 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
       type: "actions",
       elements: buttons,
     });
+  }else if(radioButtonsOptions.length){
+    block[0].accessory = radioButtons;
   }else if(answerSelected){ // this applies for free text questions, there are no buttons and the answer selected is the text to put in place 
     block.push({
       type: "section",
