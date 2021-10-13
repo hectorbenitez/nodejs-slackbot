@@ -9,7 +9,8 @@
     "dev:client": "NODE_ENV=development webpack --watch",
     "build": "webpack --mode production",
     "start": "node app.js",
-    "reminder": "node scripts/incompleteSurveyReminder.js"
+    "reminder": "node scripts/incompleteSurveyReminder.js",
+    "alerts:tbw2021": "node scripts/tbw2021Alerts.js"
   },
   "repository": {
     "type": "git",
@@ -29,6 +30,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.24.0",
     "mongoose": "^5.12.2",
+    "mongoose-seed": "^0.6.0",
     "node-fetch": "^2.6.1"
   },
   "devDependencies": {
