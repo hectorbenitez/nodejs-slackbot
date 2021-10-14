@@ -11,7 +11,8 @@ const TBWGroupSchema = new Schema(
       name: { type: String },
       email: { type: String },
       slackUserId: {type: String }
-    }]
+    }],
+    team: { type: Schema.Types.ObjectId, ref: "Team" }
   },
   {
     timestamps: true

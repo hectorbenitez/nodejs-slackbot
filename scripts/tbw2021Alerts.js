@@ -4,6 +4,7 @@ const { WebClient } = require('@slack/web-api')
 const mongoose = require('mongoose')
 const TBWSettings = require('../models/tbwSetting');
 const TBWGroups = require('../models/tbwGroup');
+const Team = require('../models/team')
 
 require('dotenv').config()
 
@@ -35,7 +36,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 
     const slackClient = new WebClient();
 
-    const groups = await TBWGroups.find();
+    const groups = await TBWGroups.find().populate('team')
 
     const promises = groups.map(async group => {
       for (var i = 0; i < group.users.length; i++) {
@@ -45,7 +46,7 @@ mongoose.connect(process.env.MONGODB_URI, {
           if (!group.users[i].slackUserId) {
             const slackUserData = await slackClient.users.lookupByEmail({
               email: group.users[i].email,
-              token: process.env.SLACK_BOT_TOKEN
+              token: group.team.accessToken
             })
 
             if (!slackUserData) {
@@ -72,7 +73,7 @@ mongoose.connect(process.env.MONGODB_URI, {
           await slackClient.chat.postMessage({
             channel: slackUserId,
             blocks: createMessage(settings, group),
-            token: process.env.SLACK_BOT_TOKEN
+            token: group.team.accessToken
           })
         } catch (err) {
           console.log(`Error working on user: ${group.users[i].email}`, err)
