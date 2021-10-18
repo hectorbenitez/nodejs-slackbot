@@ -4,6 +4,8 @@ const TBWGroupSchema = new Schema(
   {
     name: { type: String },
     responsible: { type: String },
+    email: {type: String },
+    slackUserId: {type: String },
     number: { type: Number },
     form: { type: String },
     documentFolderLink: { type: String },

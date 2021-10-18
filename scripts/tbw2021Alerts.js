@@ -8,6 +8,8 @@ const Team = require('../models/team')
 
 require('dotenv').config()
 
+const slackClient = new WebClient();
+
 // Mongoose connection
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
@@ -34,20 +36,47 @@ mongoose.connect(process.env.MONGODB_URI, {
 
     console.log('Process starting ... ');
 
-    const slackClient = new WebClient();
-
     const groups = await TBWGroups.find().populate('team')
 
     const promises = groups.map(async group => {
+      // Send message to responsible
+      let responsibleUserSlackId;
+
+      if (!group.slackUserId) {
+        const resposibleSlackUserData = await getSlackUserData(group.email, group.team.accessToken);
+
+        if (!resposibleSlackUserData) {
+          console.log(`Responsible email: ${group.email} not found in Slack.`);
+        } else {
+
+          // We update slack user id to avoid recovering it again next time
+          await updateResponsible(group.email, resposibleSlackUserData.user.id);
+
+          responsibleUserSlackId = resposibleSlackUserData.user.id;
+        }
+      } else {
+        responsibleUserSlackId = group.slackUserId;
+      }
+
+      try {
+      // Send Slack Message
+      await slackClient.chat.postMessage({
+        channel: responsibleUserSlackId,
+        blocks: createResponsibleMessage(settings, group),
+        token: group.team.accessToken
+      })
+    } catch (errResponsibleMessage) {
+      console.log(`Unable to send message to responsible. Reason: ${errResponsibleMessage}`)
+    }
+
+
+      // Send message to all group users
       for (var i = 0; i < group.users.length; i++) {
         try {
           let slackUserId;
 
           if (!group.users[i].slackUserId) {
-            const slackUserData = await slackClient.users.lookupByEmail({
-              email: group.users[i].email,
-              token: group.team.accessToken
-            })
+            const slackUserData = await getSlackUserData(group.users[i].email, group.team.accessToken);
 
             if (!slackUserData) {
               console.log(`User email: ${group.users[i].email} not found in Slack.`);
@@ -55,15 +84,8 @@ mongoose.connect(process.env.MONGODB_URI, {
             }
 
             // We update slack user id to avoid recovering it again next time
-            await TBWGroups.updateOne(
-              { 'users.email': group.users[i].email },
-              {
-                '$set': {
-                  'users.$.slackUserId': slackUserData.user.id
-                }
-              }
-            );
-            
+            await updateUserGroup(group.users[i].email, slackUserData.user.id);
+
             slackUserId = slackUserData.user.id;
           } else {
             slackUserId = group.users[i].slackUserId;
@@ -72,7 +94,7 @@ mongoose.connect(process.env.MONGODB_URI, {
           // Send Slack Message
           await slackClient.chat.postMessage({
             channel: slackUserId,
-            blocks: createMessage(settings, group),
+            blocks: createUserMessage(settings, group, group.users[i]),
             token: group.team.accessToken
           })
         } catch (err) {
@@ -91,24 +113,84 @@ mongoose.connect(process.env.MONGODB_URI, {
       });
   })
 
-  function createMessage(settings, group) {
-    const text = interpolate(settings.message, 
-      {responsible: group.responsible, groupNumber: group.number, form: group.form, documentFolderLink: group.documentFolderLink});
-    return [
-      {
-        type: "section",
-        text: {
-          type: "mrkdwn",
-          text
-        },
-      }
-    ];
-  }
+async function getSlackUserData(email, token) {
+  try {
+    const slackUserData = await slackClient.users.lookupByEmail({
+      email,
+      token
+    })
 
-  function interpolate(message, params) {
-    const names = Object.keys(params);
-    const vals = Object.values(params);
-    return new Function(...names, `return \`${message}\`;`)(...vals);
+    return slackUserData;
+  } catch (err) {
+    console.log(`Error getting Slack user data for: ${email}. Error: ${err}`);
+    return null;
   }
+}
+
+async function updateUserGroup(email, slackUserId) {
+  await TBWGroups.updateOne(
+    { 'users.email': email },
+    {
+      '$set': {
+        'users.$.slackUserId': slackUserId
+      }
+    }
+  );
+}
+
+async function updateResponsible(email, slackUserId) {
+  await TBWGroups.updateOne(
+    { 'email': email },
+    {
+      '$set': {
+        'slackUserId': slackUserId
+      }
+    }
+  );
+}
+
+function createUserMessage(settings, group, user) {
+  const text = interpolate(settings.message,
+    {
+      responsible: group.responsible,
+      groupNumber: group.number,
+      form: group.form, documentFolderLink:
+        group.documentFolderLink,
+      userName: user.name,
+    });
+  return [
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text
+      },
+    }
+  ];
+}
+
+function createResponsibleMessage(settings, group) {
+  const text = interpolate(settings.responsibleMessage,
+    {
+      responsible: group.responsible,
+      form: group.form, 
+      documentFolderLink: group.documentFolderLink
+    });
+  return [
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text
+      },
+    }
+  ];
+}
+
+function interpolate(message, params) {
+  const names = Object.keys(params);
+  const vals = Object.values(params);
+  return new Function(...names, `return \`${message}\`;`)(...vals);
+}
 
 
