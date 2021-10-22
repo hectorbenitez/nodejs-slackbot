@@ -59,19 +59,20 @@ mongoose.connect(process.env.MONGODB_URI, {
       }
 
       try {
-      // Send Slack Message
-      await slackClient.chat.postMessage({
-        channel: responsibleUserSlackId,
-        blocks: createResponsibleMessage(settings, group),
-        token: group.team.accessToken
-      })
-    } catch (errResponsibleMessage) {
-      console.log(`Unable to send message to responsible. Reason: ${errResponsibleMessage}`)
-    }
-
+        // Send Slack Message
+        await slackClient.chat.postMessage({
+          channel: responsibleUserSlackId,
+          blocks: createResponsibleMessage(settings, group),
+          token: group.team.accessToken
+        })
+      } catch (errResponsibleMessage) {
+        console.log(`Unable to send message to responsible. Reason: ${errResponsibleMessage}`)
+      }
 
       // Send message to all group users
       for (var i = 0; i < group.users.length; i++) {
+        if (group.users[i].inactive) continue;
+
         try {
           let slackUserId;
 
@@ -173,7 +174,7 @@ function createResponsibleMessage(settings, group) {
   const text = interpolate(settings.responsibleMessage,
     {
       responsible: group.responsible,
-      form: group.form, 
+      form: group.form,
       documentFolderLink: group.documentFolderLink
     });
   return [
