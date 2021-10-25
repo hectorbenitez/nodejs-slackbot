@@ -12,7 +12,8 @@ const TBWGroupSchema = new Schema(
     users: [{
       name: { type: String },
       email: { type: String },
-      slackUserId: {type: String }
+      slackUserId: {type: String },
+      inactive: { type: Boolean }
     }],
     team: { type: Schema.Types.ObjectId, ref: "Team" }
   },
