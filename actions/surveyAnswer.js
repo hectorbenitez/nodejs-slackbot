@@ -8,7 +8,6 @@ module.exports = (app) => {
   app.action(
     /survey-answer-(\d)/,
     async ({ ack, body, action, context, say, client }) => {
-      // console.log(body, action, context);
       await ack();
 
       const surveySession = await SurveySession.findOne({
@@ -18,15 +17,25 @@ module.exports = (app) => {
       if (!surveySession) {
         return say("You are not answering a survey");
       }
-
-      const answerValue = action.value.split("-");
-      const questionIndex = answerValue[2];
-      const answer = answerValue[3];
+      let answerValue = '';
+      let questionIndex = '';
+      let answer = '';
+      if(action.value){ //free text
+        answerValue = action.value?.split("-");
+        questionIndex = answerValue[2];
+        answer = answerValue[3];
+      }else if(action.selected_option?.value){ // radio buttons
+        answerValue = action.selected_option?.value.split("-")
+        questionIndex = answerValue[2];
+        answer = answerValue[3];
+      }else if(action.selected_options?.length){ // checkboxes
+        questionIndex = action.selected_options[0].value.split("-")[2];
+        answer = action.selected_options.map(option => option.value.split("-")[3]).join(', ');
+      }
       let requireNewQuestion = false;
 
       surveySession.questions[questionIndex].answer = answer;
 
-      // console.log(questionIndex, surveySession.index)
       if (questionIndex == surveySession.index) {
         surveySession.index = getNextIndex(surveySession);
         requireNewQuestion = true;
@@ -37,22 +46,17 @@ module.exports = (app) => {
       }
       await surveySession.save();
 
-      const result = await client.chat.update({
-        channel: body.channel.id,
-        ts: body.message.ts,
-        blocks: createBlockKitQuestion(
-          surveySession,
-          questionIndex,
-          answer
-        ),
-      });
-
-      // console.log({
-      //   channel: body.channel.id,
-      //   ts: body.message.ts,
-      //   text: "Updated",
-      //   result,
-      // });
+      if(action.value){ //only for free text
+        await client.chat.update({
+          channel: body.channel.id,
+          ts: body.message.ts,
+          blocks: createBlockKitQuestion(
+            surveySession,
+            questionIndex,
+            answer
+          ),
+        });
+      }
 
       if (surveySession.isCompleted) {
         return await say('Thank you to completing the survey! We really appreciate your time. If you have any feedback, let us know <@UFDF3F8GN> or <@U01DD27GE0J>');

@@ -13,9 +13,10 @@ module.exports =  {
     surveySession.userName = user.profile.real_name;
     surveySession.userEmail = user.profile.email;
     surveySession.survey = survey;
-    surveySession.questions = survey.questions.map(({ question, type, context, condition, emoji }) => ({
+    surveySession.questions = survey.questions.map(({ question, type, options, context, condition, emoji }) => ({
       question,
       type,
+      options,
       context,
       emoji,
       condition,

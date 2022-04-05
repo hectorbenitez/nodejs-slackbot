@@ -13,6 +13,7 @@ const SurveySessionSchema = new Schema(
         ts: { type: String },
         question: { type: String },
         type: { type: String },
+        options: [{ type: String }],
         context: { type: String },
         answer: { type: String },
         condition: {
