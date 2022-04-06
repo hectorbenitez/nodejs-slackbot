@@ -59,7 +59,7 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
 
   if (question.type === "radio_buttons") {
     answers = [];
-    radioButtonsOptions = ["1 (NEVER)","2","3","4","5","6","7","8","9","10 (ALL THE TIME)"]
+    radioButtonsOptions = question.options;
   }
   if (question.type === "checkboxes") {
     answers = [];
