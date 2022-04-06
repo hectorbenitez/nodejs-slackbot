@@ -17,6 +17,10 @@ function getNextIndex(surveySession) {
             break
         }
 
+        if(question.condition.values.includes(surveySession.questions[conditionIdx].answer)) {
+            break
+        }
+
         idx++
         question = surveySession.questions[idx]        
     }

@@ -18,6 +18,7 @@ const SurveySchema = new Schema(
         condition: {
           idx: { type: Number },
           value: { type: String },
+          values: [{ type: String }],
         },
         emoji: { type: String}
       },
