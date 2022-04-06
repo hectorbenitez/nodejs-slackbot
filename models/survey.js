@@ -14,6 +14,7 @@ const SurveySchema = new Schema(
         type: { type: String },
         context: { type: String },
         answers: [{ type: String }],
+        options: [{ type: String }],
         condition: {
           idx: { type: Number },
           value: { type: String },

@@ -10,6 +10,7 @@ module.exports = (app) => {
 
     const slug = splitedCommand[2];
     const survey = await Survey.findOne({ slug });
+
     if(!survey){
       return await say("Survey not found");
     }    
