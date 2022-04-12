@@ -21,8 +21,8 @@ module.exports =  {
       emoji,
       condition,
     }));
-    surveySession.save();
-
+    await surveySession.save();
+    
     try{
       await slackClient.chat.postMessage({
         channel: user.id,
@@ -33,7 +33,7 @@ module.exports =  {
         blocks: createBlockKitQuestion(surveySession, 0)
       })
       surveySession.questions[0].ts = result.ts;
-      surveySession.save();
+      await surveySession.save();
     }catch(e){
       console.log(`error starting survey for user ${user.id}`, e);
       return Promise.resolve({userId: user.id, result: "error"});
