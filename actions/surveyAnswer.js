@@ -15,7 +15,7 @@ module.exports = (app) => {
         isCompleted: false,
       });
       if (!surveySession) {
-        return say("You are not answering a survey");
+        return say("You are not answering a survey, maybe the survey was completed or cancelled. If you feel this is an error, please contact Corina Navarro.");
       }
       let answerValue = '';
       let questionIndex = '';
