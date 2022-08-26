@@ -35,7 +35,7 @@
   },
   "devDependencies": {
     "@neutrinojs/react": "^9.5.0",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "bootstrap": "^4.6.0",
     "dotenv-webpack": "^7.0.2",
     "eslint": "^7.22.0",
