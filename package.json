@@ -31,7 +31,7 @@
     "moment": "^2.29.4",
     "mongoose": "^5.12.2",
     "mongoose-seed": "^0.6.0",
-    "node-fetch": "^2.6.1"
+    "node-fetch": "^2.6.7"
   },
   "devDependencies": {
     "@neutrinojs/react": "^9.5.0",
