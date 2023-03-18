@@ -35,7 +35,10 @@ module.exports = (app) => {
       let requireNewQuestion = false;
 
       surveySession.questions[questionIndex].answer = answer;
-
+      
+      if(surveySession.questions[questionIndex].considerCompleted){
+        surveySession.considerCompleted = true;
+      }
       if (questionIndex == surveySession.index) {
         surveySession.index = getNextIndex(surveySession);
         requireNewQuestion = true;

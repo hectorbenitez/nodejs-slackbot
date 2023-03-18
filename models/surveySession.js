@@ -8,6 +8,7 @@ const SurveySessionSchema = new Schema(
     survey: { type: Schema.Types.ObjectId, ref: "Survey" },
     index: { type: Number, default: 0 },
     isCompleted: { type: Boolean, default: false },
+    considerCompleted: {type: Boolean, default: false},
     questions: [
       {
         ts: { type: String },
@@ -21,7 +22,8 @@ const SurveySessionSchema = new Schema(
           value: { type: String },
           values: [{ type: String }],
         },
-        emoji: { type: String}
+        emoji: { type: String},
+        considerCompleted: {type: Boolean, default: false},
       },
     ],
   },

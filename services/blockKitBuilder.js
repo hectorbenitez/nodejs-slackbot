@@ -53,6 +53,10 @@ function createBlockKitQuestion(surveySession, index, answerSelected = null) {
     answers = ["Yes", "No"];
   }
 
+  if (question.type === "yes_no_noAnswer") {
+    answers = ["Yes", "No", "Prefer not to answer"];
+  }
+
   if (question.type === "free_text") {
     answers = [];
   }
