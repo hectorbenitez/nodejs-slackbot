@@ -15,12 +15,15 @@ function Dashboard() {
       const response = await axios.get("/api/v1/surveySessions");
       const sessions = response.data;
 
+      sessions.sort((a,b)=> a.considerCompleted - b.considerCompleted || a.isCompleted - b.isCompleted);
       setSessions(sessions);
 
       const completedSessions = sessions.filter(session => session.isCompleted)
+      const considerCompletedSessions = sessions.filter(session => session.considerCompleted)
       setStats({
         total: sessions.length,
-        completed: completedSessions.length
+        completed: completedSessions.length,
+        considerCompleted: considerCompletedSessions.length
       })
     }
   }, [deleteModalState]);
@@ -48,7 +51,7 @@ function Dashboard() {
         <Row>
           <Col>
             <h3>Survey Sessions</h3>
-            Total: { stats.total } | Completed: { stats.completed }
+            Total: { stats.total } | Considered Complete: { stats.considerCompleted } | Completed: { stats.completed }
             <hr></hr>
             <Table striped bordered>
               <thead>
@@ -57,6 +60,7 @@ function Dashboard() {
                   <th>Survey</th>
                   <th>Created at</th>
                   <th>Progress</th>
+                  <th>Consider <br/> Complete</th>
                   <th>Answers</th>
                   <th></th>
                 </tr>
@@ -74,6 +78,9 @@ function Dashboard() {
                           : `${Math.round(
                               (session.index * 100) / session.questions.length
                             )}%`}
+                      </td>
+                      <td>
+                        {session.considerCompleted ? "yes": `no`}
                       </td>
                       <th scope="row">
                         <Link to={`surveySessions/${session._id}`}>
