@@ -13,13 +13,14 @@ module.exports =  {
     surveySession.userName = user.profile.real_name;
     surveySession.userEmail = user.profile.email;
     surveySession.survey = survey;
-    surveySession.questions = survey.questions.map(({ question, type, options, context, condition, emoji }) => ({
+    surveySession.questions = survey.questions.map(({ question, type, options, context, condition, emoji, considerCompleted }) => ({
       question,
       type,
       options,
       context,
       emoji,
       condition,
+      considerCompleted
     }));
     await surveySession.save();
     

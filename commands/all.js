@@ -40,7 +40,7 @@ module.exports = app => {
         });
   
         if (activeSurvey.isCompleted) {
-          return await say('Thank you to completing the survey! We really appreciate your time. If you have any feedback, let us know <@UFDF3F8GN> or <@UEAS243FW>');
+          return await say('Thank you to completing the survey! We really appreciate your time. If you have any feedback, let us know <@UFDF3F8GN> or <@U01UZBN1ZE2>');
         }
   
         if (!activeSurvey.isCompleted) {

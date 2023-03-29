@@ -20,7 +20,8 @@ const SurveySchema = new Schema(
           value: { type: String },
           values: [{ type: String }],
         },
-        emoji: { type: String}
+        emoji: { type: String},
+        considerCompleted: {type: Boolean, default: false}
       },
     ],
     answerSurveyId: { type: String },

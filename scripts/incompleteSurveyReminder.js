@@ -17,26 +17,28 @@ mongoose.connect(process.env.MONGODB_URI, {
     const tolerance = process.env.REMINDER_TOLERANCE || 86400000; // one day
     const threshold = new Date(new Date().getTime() - tolerance);
     const incompleteSurveys = await SurveySession.find({
-      isCompleted: false, 
+      considerCompleted: false,
       createdAt: { $lte: threshold }
     }).populate({
       path: "survey",
       populate: { path: "team"}
     });
   
-    const promises = incompleteSurveys.map(surveySession => {
-      const percentage = Math.round(surveySession.index * 100 / surveySession.questions.length);
-      
-      return slackClient.chat.postMessage({
-          channel: surveySession.slackUser,
-          blocks: createSurveyReminder(surveySession.survey.reminderMessage, `${percentage}%`),
-          token: surveySession.survey.team.accessToken
-        })
-        .catch(err => {
-          console.log(`error sending reminder to user ${surveySession.userName}`, err)
-          console.log('error', err.data)
-        })
-    })
+    const promises = incompleteSurveys
+      .filter(surveySession => surveySession.survey.slug === 'wellbeing2023')
+      .map(surveySession => {
+        const percentage = Math.round(surveySession.index * 100 / surveySession.questions.length);
+        
+        return slackClient.chat.postMessage({
+            channel: surveySession.slackUser,
+            blocks: createSurveyReminder(surveySession.survey.reminderMessage, `${percentage}%`),
+            token: surveySession.survey.team.accessToken
+          })
+          .catch(err => {
+            console.log(`error sending reminder to user ${surveySession.userName}`, err)
+            console.log('error', err.data)
+          })
+      })
     Promise.all(promises)
       .finally(() => {
         console.log('survey reminder sent');
