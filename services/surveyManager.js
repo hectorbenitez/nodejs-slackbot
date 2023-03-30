@@ -3,7 +3,7 @@ const { createBlockKitQuestion, createSurveyHeader } = require('./../services/bl
 
 module.exports =  {
   startSurvey: async({survey, user, slackClient}) => {
-    let surveySession = await SurveySession.findOne({ slackUser: user.id, isCompleted: false });
+    let surveySession = await SurveySession.findOne({ slackUser: user.id, survey});
     if (surveySession) {
       console.log("user has one started", user.id);
       return Promise.resolve({userId: user.id, result: "alreadyStarted"});
