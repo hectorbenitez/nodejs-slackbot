@@ -41,14 +41,14 @@
     "eslint": "^7.22.0",
     "neutrino": "^9.5.0",
     "nodemon": "^2.0.20",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "react-icons": "^4.2.0",
     "react-router-dom": "^5.2.0",
     "react-slack-login": "^1.1.7",
     "reactstrap": "^8.9.0",
     "webpack": "^4.46.0",
     "webpack-cli": "^3.3.12",
-    "webpack-dev-server": "^4.10.0"
+    "webpack-dev-server": "^3.11.0"
   }
 }
