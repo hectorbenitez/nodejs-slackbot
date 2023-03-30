@@ -3,8 +3,8 @@ const SurveySession = require("./../../../models/surveySession");
 module.exports = (receiver) => {
   receiver.router.get("/api/v1/surveySessions", async (req, res) => {
     try {
-      const sessions = await SurveySession.find().populate("survey");
-      console.log("sessions=====", sessions);
+      let sessions = await SurveySession.find().populate("survey")
+      sessions = sessions.filter(session => session.survey && session.survey.slug === 'wellbeing2023');
       res.json(sessions);
     } catch (error) {
       console.error("get sessions error", error);
