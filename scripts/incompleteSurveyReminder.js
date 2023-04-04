@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 const Team = require('../models/team')
 const Survey = require('../models/survey')
 const SurveySession = require('../models/surveySession')
-const { createSurveyReminder } = require('../services/blockKitBuilder');
+const { createSurveyReminder, createBlockKitQuestion, createSurveyHeader } = require('../services/blockKitBuilder');
 require('dotenv').config()
 
 // Mongoose connection
@@ -24,26 +24,47 @@ mongoose.connect(process.env.MONGODB_URI, {
       populate: { path: "team"}
     });
   
-    const promises = incompleteSurveys
+    let surveySessions = incompleteSurveys
       .filter(surveySession => surveySession.survey.slug === 'wellbeing2023')
-      .map(surveySession => {
-        const percentage = Math.round(surveySession.index * 100 / surveySession.questions.length);
+
+    for(let i=0; i<surveySessions.length; i++){
+      let surveySession = surveySessions[i];
+      const percentage = Math.round(surveySession.index * 100 / surveySession.questions.length);
         
-        return slackClient.chat.postMessage({
+      try{
+        await slackClient.chat.postMessage({
+          channel: surveySession.slackUser,
+          blocks: createSurveyReminder(surveySession.survey.reminderMessage, `${percentage}%`),
+          token: surveySession.survey.team.accessToken
+        })
+        if(surveySession.index === 0){
+          await slackClient.chat.postMessage({
             channel: surveySession.slackUser,
-            blocks: createSurveyReminder(surveySession.survey.reminderMessage, `${percentage}%`),
+            blocks: createSurveyHeader(surveySession.survey.surveyName, surveySession.survey.welcomeMessage),
             token: surveySession.survey.team.accessToken
-          })
-          .catch(err => {
-            console.log(`error sending reminder to user ${surveySession.userName}`, err)
-            console.log('error', err.data)
-          })
+          });
+        }
+        const result = await slackClient.chat.postMessage({
+          channel: surveySession.slackUser,
+          blocks: createBlockKitQuestion(surveySession, surveySession.index),
+          token: surveySession.survey.team.accessToken
+        })
+        surveySession.questions[surveySession.index].ts = result.ts;
+        await surveySession.save();
+
+      }catch(err){
+        console.log(`error sending reminder question to user ${surveySession.userName}`, err)
+        console.log('error', err.data)
+      }
+
+      await new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, 2000);
       })
-    Promise.all(promises)
-      .finally(() => {
-        console.log('survey reminder sent');
-        process.exit(0);
-      })
+    }
+    console.log('survey reminder done');
+    process.exit(0);
   })
 
 
